@@ -345,14 +345,37 @@ footer{border-top:1px solid var(--line); padding:60px 0; text-align:center; colo
           <div class="glass"><div class="ic">🌏</div><h4>Serving</h4><p>India &amp; International</p></div>
         </div>
       </div>
-      <form onsubmit="event.preventDefault();">
-        <div class="field"><input placeholder="Your Name" required></div>
-        <div class="field"><input placeholder="Business Name"></div>
-        <div class="field"><input type="email" placeholder="Email Address" required></div>
-        <div class="field"><select><option>Select a service</option><option>Starter Website (₹8,000)</option><option>Growth Package (₹12,000 + ₹2k/mo)</option><option>Enterprise / Custom</option><option>Not sure — let's talk</option></select></div>
-        <div class="field"><textarea rows="4" placeholder="Tell Us About Your Business"></textarea></div>
-        <button class="btn btn-primary magnetic" style="width:100%;justify-content:center;">Send Consultation Request →</button>
+      <form id="cform" action="https://formsubmit.co/ajax/covaraglobal@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="New Consultation Request — Covara">
+        <div class="field"><input name="Name" placeholder="Your Name" required></div>
+        <div class="field"><input name="Business" placeholder="Business Name"></div>
+        <div class="field"><input type="email" name="Email" placeholder="Email Address" required></div>
+        <div class="field"><select name="Service"><option>Select a service</option><option>Starter Website (₹8,000)</option><option>Growth Package (₹12,000 + ₹2k/mo)</option><option>Enterprise / Custom</option><option>Not sure — let's talk</option></select></div>
+        <div class="field"><textarea name="Message" rows="4" placeholder="Tell Us About Your Business"></textarea></div>
+        <button type="submit" class="btn btn-primary magnetic" style="width:100%;justify-content:center;">Send Consultation Request →</button>
       </form>
+      <div id="cform-success" style="display:none; text-align:center; padding:50px 20px;">
+        <div style="font-size:38px; margin-bottom:14px;">✓</div>
+        <h4 style="margin-bottom:8px;">Request Received</h4>
+        <p style="color:var(--mute); font-size:14px;">Thanks — we'll get back to you within 24 hours.</p>
+      </div>
+      <script>
+        document.getElementById('cform').addEventListener('submit', async function(e){
+          e.preventDefault();
+          const form = this, btn = form.querySelector('button'), original = btn.textContent;
+          btn.textContent = 'Sending…'; btn.disabled = true;
+          try{
+            const res = await fetch(form.action, { method:'POST', headers:{'Accept':'application/json'}, body:new FormData(form) });
+            if(!res.ok) throw new Error();
+            form.style.display = 'none';
+            document.getElementById('cform-success').style.display = 'block';
+          }catch(err){
+            btn.textContent = "Couldn't send — try again";
+            btn.disabled = false;
+            setTimeout(()=>{ btn.textContent = original; }, 3000);
+          }
+        });
+      </script>
     </div>
   </div>
 </section>
