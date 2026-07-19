@@ -917,6 +917,66 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
   top: 16px;
 }
 
+/* ============ E-RESTRO LAUNCH ============ */
+.erestro {
+  position: relative;
+  margin-top: 48px;
+  border: 1px solid var(--gold);
+  border-radius: 24px;
+  padding: clamp(40px, 4.5vw, 56px) clamp(26px, 4vw, 56px) clamp(32px, 4vw, 48px);
+  background:
+    radial-gradient(ellipse 90% 130% at 10% 0%, rgba(212, 177, 116, 0.12), transparent 60%),
+    var(--ink-3);
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: clamp(28px, 4vw, 72px);
+  align-items: center;
+  overflow: visible;
+  box-shadow: 0 30px 80px -30px rgba(212, 177, 116, 0.25);
+}
+.erestro-kicker {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 14px;
+}
+.erestro h3 {
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+.erestro-sub { color: var(--ivory-dim); max-width: 52ch; margin-bottom: 22px; }
+.erestro .tags { margin-bottom: 22px; }
+.erestro-ext { font-size: 14px; color: var(--ivory-faint); }
+.erestro-ext b { color: var(--gold); font-weight: 600; }
+.erestro-price {
+  text-align: center;
+  border-left: 1px solid var(--line);
+  padding-left: clamp(24px, 3vw, 56px);
+}
+.erestro-price .amount { font-size: clamp(44px, 5vw, 64px); display: block; margin-bottom: 6px; }
+.erestro-price .per { display: block; margin-bottom: 24px; }
+.erestro-note {
+  margin-top: 16px;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ivory-faint);
+  font-size: 14.5px;
+}
+@media (max-width: 860px) {
+  .erestro { grid-template-columns: 1fr; }
+  .erestro-price {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    padding-top: 28px;
+    text-align: left;
+  }
+}
+
 /* ============ PROMISE ============ */
 .promise {
   background:
@@ -1531,6 +1591,22 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
           <a href="#contact" class="btn btn-ghost btn-block">Talk to us <span class="arr">→</span></a>
         </article>
       </div>
+      <article class="erestro reveal reveal-scale d-4" id="erestro">
+        <span class="badge">New launch</span>
+        <div>
+          <span class="erestro-kicker">E-Restro — For Restaurants &amp; Cafés</span>
+          <h3>Great food deserves a <em class="gold-em">great</em> digital presence.</h3>
+          <p class="erestro-sub">One complete package: a professional website, a digital menu with QR scanner, social media assets, and full launch support — everything your restaurant needs to go online.</p>
+          <div class="tags"><span>Website</span><span>Digital Menu</span><span>QR Scanner</span><span>Social Assets</span><span>Launch Support</span></div>
+          <p class="erestro-ext">Extended: social media management from <b>₹200/month</b>.</p>
+        </div>
+        <div class="erestro-price">
+          <span class="amount">₹4,000</span>
+          <span class="per">one-time setup · full launch included</span>
+          <a href="#contact" class="btn btn-gold btn-block" data-service="erestro">Bring your restaurant online <span class="arr">→</span></a>
+          <p class="erestro-note">Your restaurant thrives when the world can find it.</p>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -1609,6 +1685,7 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
             <option value="" disabled selected>Select a service</option>
             <option>Starter website (₹8,000)</option>
             <option>Growth package (₹12,000 + ₹2k/mo)</option>
+            <option>E-Restro — Restaurants &amp; Cafés (₹4,000)</option>
             <option>Enterprise / custom</option>
             <option>Not sure — let's talk</option>
           </select>
@@ -1885,6 +1962,15 @@ const faqItems = document.querySelectorAll(".faq-list details");
 faqItems.forEach((d) => {
   d.addEventListener("toggle", () => {
     if (d.open) faqItems.forEach((other) => other !== d && (other.open = false));
+  });
+});
+
+// ---------- E-Restro CTA → preselect service in contact form ----------
+document.querySelectorAll('[data-service="erestro"]').forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const sel = document.querySelector('#contactForm select[name="service"]');
+    const opt = [...sel.options].find((o) => o.text.startsWith("E-Restro"));
+    if (opt) sel.value = opt.text;
   });
 });
 
