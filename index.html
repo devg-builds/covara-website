@@ -977,6 +977,71 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
   }
 }
 
+/* ============ STUDENT PORTFOLIO ============ */
+.student-portfolio {
+  border-color: var(--line);
+  background:
+    radial-gradient(ellipse 90% 130% at 90% 0%, rgba(212, 177, 116, 0.1), transparent 60%),
+    var(--ink-3);
+}
+
+/* ============ CREATOR REFERRAL ============ */
+.referral-box {
+  margin-top: 24px;
+  border: 1px dashed var(--line);
+  border-radius: 24px;
+  padding: clamp(28px, 3.4vw, 40px);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 24px;
+  align-items: center;
+  background: var(--ink-2);
+}
+.referral-copy p { color: var(--ivory-dim); font-size: 15px; margin-top: 6px; }
+.referral-input-row { display: flex; gap: 10px; }
+.referral-input-row input {
+  flex: 1;
+  background: var(--ink);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--ivory);
+  font-family: var(--sans);
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.referral-input-row input:focus { outline: none; border-color: var(--gold); }
+.referral-input-row .btn { white-space: nowrap; }
+.referral-result {
+  grid-column: 1 / -1;
+  min-height: 0;
+  font-family: var(--serif);
+  font-size: 16px;
+}
+.referral-result.show-success {
+  color: var(--gold-bright);
+  animation: referralPop 0.5s var(--ease);
+}
+.referral-result.show-error {
+  color: #d98b7a;
+  animation: referralShake 0.4s ease;
+}
+@keyframes referralPop {
+  0% { opacity: 0; transform: translateY(6px) scale(0.96); }
+  60% { opacity: 1; transform: translateY(-2px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes referralShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+@media (max-width: 860px) {
+  .referral-box { grid-template-columns: 1fr; }
+  .referral-input-row { flex-direction: column; }
+}
+
 /* ============ PROMISE ============ */
 .promise {
   background:
@@ -1278,7 +1343,6 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
       <a href="#about">About</a>
       <a href="#services">Services</a>
       <a href="#process">Process</a>
-      <a href="#work">Work</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </nav>
@@ -1296,10 +1360,9 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
     <a href="#about"><span class="mm-num">01</span>About</a>
     <a href="#services"><span class="mm-num">02</span>Services</a>
     <a href="#process"><span class="mm-num">03</span>Process</a>
-    <a href="#work"><span class="mm-num">04</span>Work</a>
-    <a href="#pricing"><span class="mm-num">05</span>Pricing</a>
-    <a href="#faq"><span class="mm-num">06</span>FAQ</a>
-    <a href="#contact" class="mm-cta"><span class="mm-num">07</span>Start a project</a>
+    <a href="#pricing"><span class="mm-num">04</span>Pricing</a>
+    <a href="#faq"><span class="mm-num">05</span>FAQ</a>
+    <a href="#contact" class="mm-cta"><span class="mm-num">06</span>Start a project</a>
   </nav>
   <div class="mobile-menu-foot">
     <a href="mailto:covaraglobal@gmail.com">covaraglobal@gmail.com</a>
@@ -1500,52 +1563,11 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
     </div>
   </section>
 
-  <!-- ===== WORK / VERTICALS ===== -->
-  <section class="section work" id="work">
-    <div class="container">
-      <div class="section-head split reveal">
-        <div>
-          <span class="kicker">04 — Target verticals</span>
-          <h2 class="section-title">Built with purpose,<br>for every kind of business.</h2>
-        </div>
-        <p class="section-note">Example builds showing what we craft for each industry.</p>
-      </div>
-      <div class="work-grid">
-        <article class="work-card reveal reveal-scale tilt">
-          <span class="work-tag">Retail</span>
-          <h3>Sharma Electronics</h3>
-          <p>Full website · inventory management · Google SEO</p>
-        </article>
-        <article class="work-card reveal reveal-scale d-2 tilt">
-          <span class="work-tag">Food &amp; Dining</span>
-          <h3>Spice Route Café</h3>
-          <p>Menu website · online reservations · Instagram growth</p>
-        </article>
-        <article class="work-card reveal reveal-scale d-3 tilt">
-          <span class="work-tag">Tech / SaaS</span>
-          <h3>NovaPay</h3>
-          <p>Landing page · waitlist · analytics dashboard</p>
-        </article>
-        <article class="work-card reveal reveal-scale d-4 tilt">
-          <span class="work-tag">Consulting</span>
-          <h3>Verma &amp; Associates</h3>
-          <p>Corporate website · appointment booking · SEO</p>
-        </article>
-        <article class="work-card work-card-cta reveal reveal-scale d-5 tilt">
-          <span class="work-tag">Your industry</span>
-          <h3>Tell us yours <span class="arr">→</span></h3>
-          <p>E-commerce, booking systems, dashboards, multi-language — we build it.</p>
-          <a href="#contact" class="card-link" aria-label="Start a project"></a>
-        </article>
-      </div>
-    </div>
-  </section>
-
   <!-- ===== PRICING ===== -->
   <section class="section pricing" id="pricing">
     <div class="container">
       <div class="section-head center reveal">
-        <span class="kicker">05 — Transparent pricing</span>
+        <span class="kicker">04 — Transparent pricing</span>
         <h2 class="section-title">Simple plans, no surprises.</h2>
         <p class="section-note">Every rupee accounted for, before we begin.</p>
       </div>
@@ -1607,6 +1629,36 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
           <p class="erestro-note">Your restaurant thrives when the world can find it.</p>
         </div>
       </article>
+
+      <article class="erestro student-portfolio reveal reveal-scale d-5" id="studentPortfolio">
+        <span class="badge">For students</span>
+        <div>
+          <span class="erestro-kicker">Student Portfolio Website — Studying Abroad?</span>
+          <h3>Show admissions officers who you <em class="gold-em">really</em> are.</h3>
+          <p class="erestro-sub">A personal portfolio website for students preparing applications — your projects, achievements, essays, and story, in one polished link you can drop into any application.</p>
+          <div class="tags"><span>Personal Bio</span><span>Projects &amp; Achievements</span><span>Resume/CV Embed</span><span>Custom Domain Ready</span></div>
+          <p class="erestro-ext">See an example build: <a href="https://devg-builds.github.io/personal-portfolio/" target="_blank" rel="noopener" class="gold-em">devg-builds.github.io/personal-portfolio</a></p>
+        </div>
+        <div class="erestro-price">
+          <span class="amount">₹300</span>
+          <span class="per">per month · managed &amp; hosted</span>
+          <a href="#contact" class="btn btn-gold btn-block" data-service="portfolio">Build my portfolio <span class="arr">→</span></a>
+          <p class="erestro-note">Cancel anytime. Your content stays yours.</p>
+        </div>
+      </article>
+
+      <article class="referral-box reveal reveal-scale d-6" id="referralBox">
+        <div class="referral-copy">
+          <span class="erestro-kicker">Creator referral</span>
+          <h3>Got a creator's referral code?</h3>
+          <p>Enter it below to unlock <b class="gold-em">15% off</b> any plan.</p>
+        </div>
+        <div class="referral-input-row">
+          <input type="text" id="referralInput" placeholder="e.g. CREATOR15" autocomplete="off" spellcheck="false">
+          <button type="button" id="referralApply" class="btn btn-gold">Apply code</button>
+        </div>
+        <div class="referral-result" id="referralResult" aria-live="polite"></div>
+      </article>
     </div>
   </section>
 
@@ -1626,7 +1678,7 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
   <section class="section faq" id="faq">
     <div class="container faq-inner">
       <div class="section-head reveal">
-        <span class="kicker">06 — Common questions</span>
+        <span class="kicker">05 — Common questions</span>
         <h2 class="section-title">Answers, upfront.</h2>
       </div>
       <div class="faq-list reveal d-2">
@@ -1658,7 +1710,7 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
   <section class="section contact" id="contact">
     <div class="container contact-grid">
       <div class="contact-copy reveal reveal-left">
-        <span class="kicker">07 — Get in touch</span>
+        <span class="kicker">06 — Get in touch</span>
         <h2 class="section-title">Let's build something <em class="gold-em">great</em> together.</h2>
         <p>Whether you're a local shop going online for the first time or a startup that needs a polished presence — we're here, and we reply fast.</p>
         <ul class="contact-meta">
@@ -1686,6 +1738,7 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
             <option>Starter website (₹8,000)</option>
             <option>Growth package (₹12,000 + ₹2k/mo)</option>
             <option>E-Restro — Restaurants &amp; Cafés (₹4,000)</option>
+            <option>Student Portfolio Website (₹300/mo)</option>
             <option>Enterprise / custom</option>
             <option>Not sure — let's talk</option>
           </select>
@@ -1965,13 +2018,36 @@ faqItems.forEach((d) => {
   });
 });
 
-// ---------- E-Restro CTA → preselect service in contact form ----------
-document.querySelectorAll('[data-service="erestro"]').forEach((btn) => {
+// ---------- Card CTAs → preselect service in contact form ----------
+const servicePrefixes = { erestro: "E-Restro", portfolio: "Student Portfolio" };
+document.querySelectorAll("[data-service]").forEach((btn) => {
   btn.addEventListener("click", () => {
+    const prefix = servicePrefixes[btn.dataset.service];
     const sel = document.querySelector('#contactForm select[name="service"]');
-    const opt = [...sel.options].find((o) => o.text.startsWith("E-Restro"));
+    const opt = [...sel.options].find((o) => o.text.startsWith(prefix));
     if (opt) sel.value = opt.text;
   });
+});
+
+// ---------- Creator referral code ----------
+// Add/edit valid creator codes here — each unlocks 15% off.
+const REFERRAL_CODES = ["CREATOR15", "PARTNER15", "STUDIO15"];
+let appliedReferral = "";
+const referralInput = document.getElementById("referralInput");
+const referralResult = document.getElementById("referralResult");
+document.getElementById("referralApply").addEventListener("click", () => {
+  const code = referralInput.value.trim().toUpperCase();
+  referralResult.classList.remove("show-success", "show-error");
+  void referralResult.offsetWidth; // restart animation
+  if (code && REFERRAL_CODES.includes(code)) {
+    appliedReferral = code;
+    referralResult.textContent = `🎉 Code "${code}" applied — you've unlocked 15% off!`;
+    referralResult.classList.add("show-success");
+  } else {
+    appliedReferral = "";
+    referralResult.textContent = "That code isn't recognized — check with your creator and try again.";
+    referralResult.classList.add("show-error");
+  }
 });
 
 // ---------- Contact form → pre-filled email ----------
@@ -1979,19 +2055,18 @@ document.getElementById("contactForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const f = e.target;
   const subject = `New project inquiry — ${f.service.value || "General"}`;
-  const body = [
+  const bodyLines = [
     `Name: ${f.name.value}`,
     `Contact: ${f.contact.value}`,
     `Service: ${f.service.value}`,
-    "",
-    "About the business:",
-    f.message.value || "(not provided)",
-  ].join("\n");
+  ];
+  if (appliedReferral) bodyLines.push(`Referral code: ${appliedReferral} (15% off)`);
+  bodyLines.push("", "About the business:", f.message.value || "(not provided)");
   window.location.href =
     "mailto:covaraglobal@gmail.com?subject=" +
     encodeURIComponent(subject) +
     "&body=" +
-    encodeURIComponent(body);
+    encodeURIComponent(bodyLines.join("\n"));
 });
 </script>
 </body>
