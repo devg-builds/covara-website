@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Dashboard — Covara Global</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0b0a08;--ink-2:#12100d;--ink-3:#1a1712;--ivory:#f4efe6;--ivory-dim:rgba(244,239,230,.62);--ivory-faint:rgba(244,239,230,.4);--gold:#d4b174;--gold-bright:#e8cd96;--line:rgba(212,177,116,.16);--serif:"Fraunces",Georgia,serif;--sans:"Manrope",sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);color:var(--ivory);font-family:var(--sans);min-height:100vh}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,4vw,48px);border-bottom:1px solid var(--line)}
+  .logo{font-family:var(--serif);font-size:20px;color:var(--ivory);text-decoration:none}
+  .logo span{color:var(--gold)}
+  .topbar-right{display:flex;align-items:center;gap:18px;font-size:14px}
+  .topbar-right a,.topbar-right button{color:var(--ivory-dim);text-decoration:none;background:none;border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:var(--sans);cursor:pointer;font-size:13.5px}
+  .topbar-right button:hover,.topbar-right a:hover{color:var(--ivory);border-color:var(--gold)}
+  main{max-width:900px;margin:0 auto;padding:clamp(32px,5vw,56px) clamp(20px,4vw,48px)}
+  h1{font-family:var(--serif);font-weight:450;font-size:clamp(28px,3vw,38px);margin-bottom:6px}
+  .welcome{color:var(--ivory-dim);margin-bottom:36px;font-size:15px}
+  .empty{border:1px dashed var(--line);border-radius:16px;padding:40px;text-align:center;color:var(--ivory-dim)}
+  .empty a{color:var(--gold)}
+  .pkg{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:26px 28px;margin-bottom:18px}
+  .pkg-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .pkg h3{font-family:var(--serif);font-weight:450;font-size:20px}
+  .pkg .price{color:var(--gold);font-weight:600;font-size:14.5px;margin-top:4px}
+  .status{font-size:12px;padding:5px 12px;border-radius:999px;border:1px solid var(--line);white-space:nowrap;text-transform:capitalize}
+  .status.active{color:var(--gold-bright);border-color:var(--gold)}
+  .status.expired{color:#e58b7a;border-color:rgba(229,139,122,.4)}
+  .status.pending{color:var(--ivory-dim)}
+  .meta{display:flex;gap:28px;margin-top:18px;flex-wrap:wrap;font-size:13.5px;color:var(--ivory-dim)}
+  .meta b{color:var(--ivory);display:block;font-size:15px;margin-top:2px}
+  .due-badge{margin-top:14px;font-size:13px;font-family:var(--serif);font-style:italic}
+  .due-ok{color:var(--ivory-faint)}
+  .due-soon{color:var(--gold-bright)}
+  .due-over{color:#e58b7a}
+  .notes{margin-top:14px;font-size:13.5px;color:var(--ivory-faint);border-top:1px solid var(--line);padding-top:14px}
+  .cta{margin-top:40px;text-align:center;border-top:1px solid var(--line);padding-top:30px}
+  .cta a{color:var(--gold);text-decoration:none;font-family:var(--serif);font-size:16px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="logo">Covara<span>.</span></a>
+  <div class="topbar-right">
+    <span id="emailTag"></span>
+    <button id="signOutBtn">Sign out</button>
+  </div>
+</div>
+<main>
+  <h1 id="heading">Your dashboard</h1>
+  <p class="welcome" id="welcome">Loading your account…</p>
+  <div id="packages"></div>
+  <div class="cta">
+    <p style="color:var(--ivory-dim);font-size:14px;margin-bottom:10px">Want to add another service or upgrade your plan?</p>
+    <a href="index.html#contact">Talk to Covara →</a>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb = supabase.createClient(
+  "https://ekqxrttxkntvcqyojfjq.supabase.co",
+  "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
+);
+
+function dueInfo(dueDate) {
+  if (!dueDate) return { text: "No due date set", cls: "due-ok" };
+  const days = Math.ceil((new Date(dueDate) - new Date()) / 86400000);
+  if (days < 0) return { text: `Overdue by ${Math.abs(days)} day(s)`, cls: "due-over" };
+  if (days <= 7) return { text: `Due in ${days} day(s)`, cls: "due-soon" };
+  return { text: `Renews on ${new Date(dueDate).toLocaleDateString()}`, cls: "due-ok" };
+}
+
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return (window.location.href = "login.html");
+
+  const { data: profile } = await sb.from("profiles").select("*").eq("id", session.user.id).single();
+  if (profile?.is_admin) return (window.location.href = "admin.html");
+
+  document.getElementById("emailTag").textContent = session.user.email;
+  document.getElementById("welcome").textContent = `Welcome back, ${profile?.full_name || session.user.email}.`;
+
+  const { data: packages } = await sb
+    .from("customer_packages")
+    .select("*")
+    .eq("user_id", session.user.id)
+    .order("updated_at", { ascending: false });
+
+  const container = document.getElementById("packages");
+  if (!packages || packages.length === 0) {
+    container.innerHTML = `<div class="empty">No active services on file yet. Once your project is set up, it'll show up here — or <a href="index.html#contact">get in touch</a> to start one.</div>`;
+    return;
+  }
+
+  container.innerHTML = packages
+    .map((p) => {
+      const due = dueInfo(p.due_date);
+      return `
+      <div class="pkg">
+        <div class="pkg-top">
+          <div>
+            <h3>${p.service_name}</h3>
+            ${p.plan_price ? `<div class="price">${p.plan_price}</div>` : ""}
+          </div>
+          <span class="status ${p.status}">${p.status}</span>
+        </div>
+        <div class="meta">
+          ${p.start_date ? `<div>Started<b>${new Date(p.start_date).toLocaleDateString()}</b></div>` : ""}
+        </div>
+        <div class="due-badge ${due.cls}">${due.text}</div>
+        ${p.notes ? `<div class="notes">${p.notes}</div>` : ""}
+      </div>`;
+    })
+    .join("");
+})();
+
+document.getElementById("signOutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

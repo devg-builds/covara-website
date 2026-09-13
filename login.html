@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Login — Covara Global</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0b0a08;--ink-2:#12100d;--ivory:#f4efe6;--ivory-dim:rgba(244,239,230,.62);--gold:#d4b174;--gold-bright:#e8cd96;--line:rgba(212,177,116,.16);--serif:"Fraunces",Georgia,serif;--sans:"Manrope",sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);color:var(--ivory);font-family:var(--sans);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{width:100%;max-width:420px;background:var(--ink-2);border:1px solid var(--line);border-radius:20px;padding:clamp(32px,4vw,44px)}
+  .logo{font-family:var(--serif);font-size:22px;color:var(--ivory);text-decoration:none;display:inline-block;margin-bottom:28px}
+  .logo span{color:var(--gold)}
+  h1{font-family:var(--serif);font-weight:450;font-size:28px;margin-bottom:6px}
+  p.sub{color:var(--ivory-dim);font-size:14.5px;margin-bottom:28px}
+  label{display:block;font-size:13px;color:var(--ivory-dim);margin-bottom:6px;margin-top:16px}
+  input{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:13px 14px;color:var(--ivory);font-family:var(--sans);font-size:15px}
+  input:focus{outline:none;border-color:var(--gold)}
+  button{width:100%;margin-top:24px;background:var(--gold);color:var(--ink);border:none;border-radius:10px;padding:14px;font-family:var(--sans);font-weight:700;font-size:15px;cursor:pointer;transition:background .25s}
+  button:hover{background:var(--gold-bright)}
+  button:disabled{opacity:.6;cursor:wait}
+  .msg{margin-top:16px;font-size:13.5px;min-height:0}
+  .msg.err{color:#e58b7a}
+  .msg.ok{color:var(--gold-bright)}
+  .foot{margin-top:24px;text-align:center;font-size:13.5px;color:var(--ivory-dim)}
+  .foot a{color:var(--gold)}
+  .back{display:inline-block;margin-bottom:20px;font-size:13px;color:var(--ivory-dim);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <a href="index.html" class="logo">Covara<span>.</span></a>
+  <a href="index.html" class="back">← Back to site</a>
+  <h1>Welcome back</h1>
+  <p class="sub">Sign in to view your project dashboard.</p>
+  <form id="loginForm">
+    <label>Email</label>
+    <input type="email" name="email" required autocomplete="email">
+    <label>Password</label>
+    <input type="password" name="password" required autocomplete="current-password">
+    <button type="submit" id="loginBtn">Sign in</button>
+    <div class="msg" id="msg"></div>
+  </form>
+  <div class="foot">New here? <a href="signup.html">Create an account</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb = supabase.createClient(
+  "https://ekqxrttxkntvcqyojfjq.supabase.co",
+  "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
+);
+
+const form = document.getElementById("loginForm");
+const msg = document.getElementById("msg");
+const btn = document.getElementById("loginBtn");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  msg.className = "msg";
+  msg.textContent = "";
+  btn.disabled = true;
+  btn.textContent = "Signing in…";
+  const { email, password } = e.target;
+  const { data, error } = await sb.auth.signInWithPassword({
+    email: email.value.trim(),
+    password: password.value,
+  });
+  if (error) {
+    msg.className = "msg err";
+    msg.textContent = error.message;
+    btn.disabled = false;
+    btn.textContent = "Sign in";
+    return;
+  }
+  const { data: profile } = await sb
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", data.user.id)
+    .single();
+  window.location.href = profile?.is_admin ? "admin.html" : "dashboard.html";
+});
+
+// If already logged in, skip straight to the right dashboard
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    const { data: profile } = await sb.from("profiles").select("is_admin").eq("id", session.user.id).single();
+    window.location.href = profile?.is_admin ? "admin.html" : "dashboard.html";
+  }
+})();
+</script>
+</body>
+</html>

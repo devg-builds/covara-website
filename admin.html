@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Covara Global</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0b0a08;--ink-2:#12100d;--ink-3:#1a1712;--ivory:#f4efe6;--ivory-dim:rgba(244,239,230,.62);--ivory-faint:rgba(244,239,230,.4);--gold:#d4b174;--gold-bright:#e8cd96;--line:rgba(212,177,116,.16);--serif:"Fraunces",Georgia,serif;--sans:"Manrope",sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);color:var(--ivory);font-family:var(--sans);min-height:100vh}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,4vw,48px);border-bottom:1px solid var(--line)}
+  .logo{font-family:var(--serif);font-size:20px;color:var(--ivory);text-decoration:none}
+  .logo span{color:var(--gold)}
+  .badge-admin{font-size:11px;border:1px solid var(--gold);color:var(--gold);padding:3px 10px;border-radius:999px;margin-left:10px;vertical-align:middle}
+  .topbar-right{display:flex;align-items:center;gap:14px;font-size:14px}
+  .topbar-right button{color:var(--ivory-dim);background:none;border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:var(--sans);cursor:pointer;font-size:13.5px}
+  .topbar-right button:hover{color:var(--ivory);border-color:var(--gold)}
+  main{max-width:1080px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px)}
+  h1{font-family:var(--serif);font-weight:450;font-size:clamp(26px,3vw,32px);margin-bottom:24px}
+  .panel{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:28px;margin-bottom:32px}
+  .panel h2{font-family:var(--serif);font-weight:450;font-size:19px;margin-bottom:18px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  label{display:block;font-size:12.5px;color:var(--ivory-dim);margin-bottom:5px;margin-top:12px}
+  input,select,textarea{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:9px;padding:11px 13px;color:var(--ivory);font-family:var(--sans);font-size:14.5px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  textarea{resize:vertical;min-height:60px}
+  .btn{margin-top:20px;background:var(--gold);color:var(--ink);border:none;border-radius:9px;padding:12px 22px;font-family:var(--sans);font-weight:700;font-size:14px;cursor:pointer}
+  .btn:hover{background:var(--gold-bright)}
+  .btn-cancel{background:none;border:1px solid var(--line);color:var(--ivory-dim);margin-left:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--ivory-faint);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+  .status{font-size:11px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);text-transform:capitalize}
+  .status.active{color:var(--gold-bright);border-color:var(--gold)}
+  .status.expired{color:#e58b7a}
+  .status.pending{color:var(--ivory-dim)}
+  .rowbtn{background:none;border:1px solid var(--line);color:var(--ivory-dim);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;margin-right:6px}
+  .rowbtn:hover{color:var(--ivory);border-color:var(--gold)}
+  .msg{margin-top:12px;font-size:13.5px}
+  .msg.err{color:#e58b7a}
+  .msg.ok{color:var(--gold-bright)}
+  #gate{padding:60px;text-align:center;color:var(--ivory-dim)}
+</style>
+</head>
+<body>
+<div id="gate">Checking admin access…</div>
+
+<div id="app" style="display:none">
+  <div class="topbar">
+    <a href="index.html" class="logo">Covara<span>.</span><span class="badge-admin">Admin</span></a>
+    <div class="topbar-right">
+      <span id="emailTag"></span>
+      <button id="signOutBtn">Sign out</button>
+    </div>
+  </div>
+  <main>
+    <h1>Customer packages</h1>
+
+    <div class="panel">
+      <h2 id="formTitle">Add a package</h2>
+      <form id="pkgForm">
+        <input type="hidden" id="editId">
+        <div class="grid2">
+          <div>
+            <label>Customer</label>
+            <select id="userSelect" required></select>
+          </div>
+          <div>
+            <label>Service</label>
+            <select id="serviceName" required>
+              <option>Starter website</option>
+              <option>Growth package</option>
+              <option>Enterprise / custom</option>
+              <option>E-Restro</option>
+              <option>Student Portfolio Website</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid2">
+          <div>
+            <label>Plan price (display text)</label>
+            <input type="text" id="planPrice" placeholder="₹2,000/mo">
+          </div>
+          <div>
+            <label>Status</label>
+            <select id="status">
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid2">
+          <div>
+            <label>Start date</label>
+            <input type="date" id="startDate">
+          </div>
+          <div>
+            <label>Due / renewal date</label>
+            <input type="date" id="dueDate">
+          </div>
+        </div>
+        <label>Notes (visible to the customer)</label>
+        <textarea id="notes" placeholder="e.g. domain renews via GoDaddy, hosting managed by us"></textarea>
+        <button type="submit" class="btn" id="submitBtn">Add package</button>
+        <button type="button" class="btn btn-cancel" id="cancelEdit" style="display:none">Cancel edit</button>
+        <div class="msg" id="formMsg"></div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>All packages</h2>
+      <table>
+        <thead>
+          <tr><th>Customer</th><th>Service</th><th>Price</th><th>Status</th><th>Due</th><th></th></tr>
+        </thead>
+        <tbody id="pkgTableBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb = supabase.createClient(
+  "https://ekqxrttxkntvcqyojfjq.supabase.co",
+  "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
+);
+
+let session, customers = [];
+
+async function loadCustomers() {
+  const { data } = await sb.from("profiles").select("id, email, full_name").eq("is_admin", false).order("email");
+  customers = data || [];
+  document.getElementById("userSelect").innerHTML = customers
+    .map((c) => `<option value="${c.id}">${c.full_name ? c.full_name + " — " : ""}${c.email}</option>`)
+    .join("");
+}
+
+function findCustomer(id) {
+  return customers.find((c) => c.id === id);
+}
+
+async function loadPackages() {
+  const { data } = await sb
+    .from("customer_packages")
+    .select("*, profiles(email, full_name)")
+    .order("updated_at", { ascending: false });
+  const body = document.getElementById("pkgTableBody");
+  body.innerHTML = (data || [])
+    .map(
+      (p) => `
+    <tr>
+      <td>${p.profiles?.full_name || p.profiles?.email || "—"}</td>
+      <td>${p.service_name}</td>
+      <td>${p.plan_price || "—"}</td>
+      <td><span class="status ${p.status}">${p.status}</span></td>
+      <td>${p.due_date ? new Date(p.due_date).toLocaleDateString() : "—"}</td>
+      <td>
+        <button class="rowbtn" onclick='editPackage(${JSON.stringify(p).replace(/'/g, "&#39;")})'>Edit</button>
+        <button class="rowbtn" onclick="deletePackage('${p.id}')">Delete</button>
+      </td>
+    </tr>`
+    )
+    .join("");
+}
+
+window.editPackage = function (p) {
+  document.getElementById("formTitle").textContent = "Edit package";
+  document.getElementById("editId").value = p.id;
+  document.getElementById("userSelect").value = p.user_id;
+  document.getElementById("serviceName").value = p.service_name;
+  document.getElementById("planPrice").value = p.plan_price || "";
+  document.getElementById("status").value = p.status;
+  document.getElementById("startDate").value = p.start_date || "";
+  document.getElementById("dueDate").value = p.due_date || "";
+  document.getElementById("notes").value = p.notes || "";
+  document.getElementById("submitBtn").textContent = "Save changes";
+  document.getElementById("cancelEdit").style.display = "inline-block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+window.deletePackage = async function (id) {
+  if (!confirm("Delete this package entry?")) return;
+  await sb.from("customer_packages").delete().eq("id", id);
+  loadPackages();
+};
+
+document.getElementById("cancelEdit").addEventListener("click", () => resetForm());
+
+function resetForm() {
+  document.getElementById("pkgForm").reset();
+  document.getElementById("editId").value = "";
+  document.getElementById("formTitle").textContent = "Add a package";
+  document.getElementById("submitBtn").textContent = "Add package";
+  document.getElementById("cancelEdit").style.display = "none";
+}
+
+document.getElementById("pkgForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("formMsg");
+  msg.className = "msg";
+  msg.textContent = "";
+  const editId = document.getElementById("editId").value;
+  const payload = {
+    user_id: document.getElementById("userSelect").value,
+    service_name: document.getElementById("serviceName").value,
+    plan_price: document.getElementById("planPrice").value || null,
+    status: document.getElementById("status").value,
+    start_date: document.getElementById("startDate").value || null,
+    due_date: document.getElementById("dueDate").value || null,
+    notes: document.getElementById("notes").value || null,
+    updated_at: new Date().toISOString(),
+  };
+  const { error } = editId
+    ? await sb.from("customer_packages").update(payload).eq("id", editId)
+    : await sb.from("customer_packages").insert(payload);
+  if (error) {
+    msg.className = "msg err";
+    msg.textContent = error.message;
+    return;
+  }
+  msg.className = "msg ok";
+  msg.textContent = editId ? "Package updated." : "Package added.";
+  resetForm();
+  loadPackages();
+});
+
+(async () => {
+  const { data: { session: s } } = await sb.auth.getSession();
+  if (!s) return (window.location.href = "login.html");
+  session = s;
+  const { data: profile } = await sb.from("profiles").select("is_admin").eq("id", s.user.id).single();
+  if (!profile?.is_admin) return (window.location.href = "dashboard.html");
+
+  document.getElementById("emailTag").textContent = s.user.email;
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  await loadCustomers();
+  await loadPackages();
+})();
+
+document.getElementById("signOutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  window.location.href = "login.html";
+});
+</script>
+</body>
+</html>
