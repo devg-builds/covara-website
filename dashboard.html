@@ -37,12 +37,28 @@
   .notes{margin-top:14px;font-size:13.5px;color:var(--ivory-faint);border-top:1px solid var(--line);padding-top:14px}
   .cta{margin-top:40px;text-align:center;border-top:1px solid var(--line);padding-top:30px}
   .cta a{color:var(--gold);text-decoration:none;font-family:var(--serif);font-size:16px}
+  .bell-wrap{position:relative}
+  .bell-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:8px 12px;color:var(--ivory-dim);cursor:pointer;font-size:15px;position:relative}
+  .bell-btn:hover{color:var(--ivory);border-color:var(--gold)}
+  .bell-dot{position:absolute;top:-4px;right:-4px;background:#e58b7a;color:#1a0d0a;font-size:10px;font-weight:700;border-radius:999px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+  .bell-panel{position:absolute;right:0;top:calc(100% + 10px);width:320px;max-height:380px;overflow-y:auto;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:10px;display:none;z-index:50}
+  .bell-panel.open{display:block}
+  .notif-item{padding:12px;border-bottom:1px solid var(--line);font-size:13.5px}
+  .notif-item:last-child{border-bottom:none}
+  .notif-item .when{color:var(--ivory-faint);font-size:11.5px;margin-top:5px}
+  .notif-empty{padding:20px;text-align:center;color:var(--ivory-faint);font-size:13.5px}
 </style>
 </head>
 <body>
 <div class="topbar">
   <a href="index.html" class="logo">Covara<span>.</span></a>
   <div class="topbar-right">
+    <div class="bell-wrap">
+      <button class="bell-btn" id="bellBtn">🔔<span class="bell-dot" id="bellDot" style="display:none">0</span></button>
+      <div class="bell-panel" id="bellPanel">
+        <div id="notifList"><div class="notif-empty">Loading…</div></div>
+      </div>
+    </div>
     <span id="emailTag"></span>
     <button id="signOutBtn">Sign out</button>
   </div>
@@ -114,7 +130,47 @@ function dueInfo(dueDate) {
       </div>`;
     })
     .join("");
+
+  loadNotifications(session.user.id);
 })();
+
+async function loadNotifications(userId) {
+  const { data: notifs } = await sb
+    .from("notifications")
+    .select("*")
+    .or(`user_id.eq.${userId},user_id.is.null`)
+    .order("created_at", { ascending: false });
+  const { data: reads } = await sb.from("notification_reads").select("notification_id").eq("user_id", userId);
+  const readIds = new Set((reads || []).map((r) => r.notification_id));
+  const list = notifs || [];
+  const unread = list.filter((n) => !readIds.has(n.id));
+
+  const dot = document.getElementById("bellDot");
+  if (unread.length > 0) {
+    dot.style.display = "flex";
+    dot.textContent = unread.length;
+  } else {
+    dot.style.display = "none";
+  }
+
+  const container = document.getElementById("notifList");
+  container.innerHTML =
+    list.length === 0
+      ? `<div class="notif-empty">No notifications yet.</div>`
+      : list
+          .map(
+            (n) => `<div class="notif-item">${n.message}<div class="when">${new Date(n.created_at).toLocaleString()}</div></div>`
+          )
+          .join("");
+
+  document.getElementById("bellBtn").addEventListener("click", async () => {
+    document.getElementById("bellPanel").classList.toggle("open");
+    if (unread.length > 0) {
+      await sb.from("notification_reads").insert(unread.map((n) => ({ notification_id: n.id, user_id: userId })));
+      dot.style.display = "none";
+    }
+  }, { once: true });
+}
 
 document.getElementById("signOutBtn").addEventListener("click", async () => {
   await sb.auth.signOut();

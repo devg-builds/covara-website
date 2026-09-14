@@ -26,6 +26,10 @@
   .foot{margin-top:24px;text-align:center;font-size:13.5px;color:var(--ivory-dim)}
   .foot a{color:var(--gold)}
   .back{display:inline-block;margin-bottom:20px;font-size:13px;color:var(--ivory-dim);text-decoration:none}
+  .pw-wrap{position:relative}
+  .pw-wrap input{padding-right:44px}
+  .pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ivory-faint);font-size:12.5px;font-family:var(--sans);padding:4px}
+  .pw-toggle:hover{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -38,7 +42,10 @@
     <label>Email</label>
     <input type="email" name="email" required autocomplete="email">
     <label>Password</label>
-    <input type="password" name="password" required autocomplete="current-password">
+    <div class="pw-wrap">
+      <input type="password" name="password" id="pwField" required autocomplete="current-password">
+      <button type="button" class="pw-toggle" id="pwToggle">Show</button>
+    </div>
     <button type="submit" id="loginBtn">Sign in</button>
     <div class="msg" id="msg"></div>
   </form>
@@ -51,6 +58,14 @@ const sb = supabase.createClient(
   "https://ekqxrttxkntvcqyojfjq.supabase.co",
   "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
 );
+
+document.getElementById("pwToggle").addEventListener("click", () => {
+  const f = document.getElementById("pwField");
+  const t = document.getElementById("pwToggle");
+  const show = f.type === "password";
+  f.type = show ? "text" : "password";
+  t.textContent = show ? "Hide" : "Show";
+});
 
 const form = document.getElementById("loginForm");
 const msg = document.getElementById("msg");
