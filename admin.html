@@ -67,6 +67,18 @@
   .notif-log .n{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px}
   .notif-log .n small{display:block;color:var(--ivory-faint);margin-top:4px}
   #gate{padding:60px;text-align:center;color:var(--ivory-dim)}
+  .csr-badge{background:#e58b7a;color:#1a0d0a;font-size:10px;font-weight:700;border-radius:999px;min-width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;margin-left:auto}
+  .csr-card{background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+  .csr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .csr-top h3{font-family:var(--serif);font-weight:450;font-size:17px}
+  .csr-contact{display:flex;gap:16px;margin-top:6px;font-size:13px;color:var(--ivory-dim);flex-wrap:wrap}
+  .csr-contact a{color:var(--gold-bright);text-decoration:none}
+  .csr-price{font-family:var(--serif);color:var(--gold);font-size:16px;text-align:right}
+  .csr-msg{margin-top:12px;font-size:13.5px;color:var(--ivory-dim);border-top:1px solid var(--line);padding-top:12px}
+  .csr-plan{font-size:12.5px;color:var(--ivory-faint);margin-top:4px}
+  .csr-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+  .csr-when{font-size:12px;color:var(--ivory-faint)}
+  .csr-status-select{width:auto;padding:6px 10px;font-size:12.5px}
 </style>
 </head>
 <body>
@@ -78,6 +90,7 @@
     <nav class="side-nav">
       <button class="active" data-view="info">🔎 Customer Information</button>
       <button data-view="assign">📦 Services Assignment</button>
+      <button data-view="csr">📨 Client Service Request <span class="csr-badge" id="csrBadge" style="display:none">0</span></button>
       <button data-view="notify">🔔 Notifications</button>
     </nav>
     <div class="side-foot">
@@ -155,6 +168,15 @@
             <div class="msg" id="formMsg"></div>
           </form>
         </div>
+      </div>
+    </div>
+
+    <!-- ===== CLIENT SERVICE REQUEST ===== -->
+    <div class="panel-view" id="view-csr">
+      <h1>Client Service Requests</h1>
+      <div class="panel">
+        <p class="note">These come straight from the "Request this quote" button on the calculator — reach out via WhatsApp or email, then mark the status once handled.</p>
+        <div id="csrList"></div>
       </div>
     </div>
 
@@ -407,6 +429,60 @@ async function loadNotifLog() {
     .join("") || `<p style="color:var(--ivory-faint);font-size:13.5px">No notifications sent yet.</p>`;
 }
 
+// ---------- CLIENT SERVICE REQUESTS ----------
+async function loadCsr() {
+  const { data } = await sb.from("service_requests").select("*").order("created_at", { ascending: false });
+  const list = data || [];
+  const newCount = list.filter((r) => r.status === "new").length;
+  const badge = document.getElementById("csrBadge");
+  if (newCount > 0) {
+    badge.style.display = "inline-flex";
+    badge.textContent = newCount;
+  } else {
+    badge.style.display = "none";
+  }
+
+  const container = document.getElementById("csrList");
+  if (list.length === 0) {
+    container.innerHTML = `<p style="color:var(--ivory-faint);font-size:13.5px">No requests yet.</p>`;
+    return;
+  }
+  container.innerHTML = list
+    .map(
+      (r) => `
+    <div class="csr-card">
+      <div class="csr-top">
+        <div>
+          <h3>${r.name || "—"}</h3>
+          <div class="csr-contact">
+            ${r.whatsapp ? `<a href="https://wa.me/${r.whatsapp.replace(/\D/g, "")}" target="_blank">WhatsApp: ${r.whatsapp}</a>` : ""}
+            ${r.email ? `<a href="mailto:${r.email}">${r.email}</a>` : ""}
+          </div>
+          <div class="csr-plan">${r.plan_summary || ""}</div>
+        </div>
+        <div class="csr-price">${r.estimate_onetime || ""}<br><span style="font-size:12.5px;color:var(--ivory-dim)">${r.estimate_monthly || ""}</span></div>
+      </div>
+      ${r.message ? `<div class="csr-msg">"${r.message}"</div>` : ""}
+      <div class="csr-foot">
+        <span class="csr-when">${new Date(r.created_at).toLocaleString()}</span>
+        <select class="csr-status-select" data-id="${r.id}">
+          <option value="new" ${r.status === "new" ? "selected" : ""}>New</option>
+          <option value="contacted" ${r.status === "contacted" ? "selected" : ""}>Contacted</option>
+          <option value="closed" ${r.status === "closed" ? "selected" : ""}>Closed</option>
+        </select>
+      </div>
+    </div>`
+    )
+    .join("");
+
+  container.querySelectorAll(".csr-status-select").forEach((sel) => {
+    sel.addEventListener("change", async () => {
+      await sb.from("service_requests").update({ status: sel.value }).eq("id", sel.dataset.id);
+      loadCsr();
+    });
+  });
+}
+
 // ---------- auth gate ----------
 (async () => {
   const { data: { session: s } } = await sb.auth.getSession();
@@ -419,6 +495,7 @@ async function loadNotifLog() {
   document.getElementById("gate").style.display = "none";
   document.getElementById("app").style.display = "flex";
   loadNotifLog();
+  loadCsr();
 })();
 
 document.getElementById("signOutBtn").addEventListener("click", async () => {

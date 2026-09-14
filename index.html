@@ -900,6 +900,86 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
 .amount { font-family: var(--serif); font-size: clamp(34px, 3.4vw, 46px); color: var(--gold); line-height: 1; }
 .per { font-family: var(--mono); font-size: 13px; color: var(--ivory-faint); letter-spacing: 0.06em; }
 .price-desc { color: var(--ivory-faint); font-size: 14.5px; margin-bottom: 28px; }
+
+/* ============ QUOTE CALCULATOR ============ */
+.calc-box {
+  margin-top: 32px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: clamp(28px, 3.4vw, 44px);
+  background: var(--ink-2);
+}
+.calc-box > h3 { font-size: 24px; margin-bottom: 6px; }
+.calc-box > p { color: var(--ivory-faint); font-size: 14.5px; margin-bottom: 28px; }
+.calc-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; }
+.calc-col label { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ivory-faint); margin-bottom: 12px; }
+.calc-options { display: flex; gap: 12px; flex-wrap: wrap; }
+.calc-opt {
+  background: var(--ink); border: 1px solid var(--line-soft); border-radius: 12px;
+  padding: 12px 18px; color: var(--ivory-dim); font-family: var(--sans); font-size: 14px;
+  cursor: pointer; transition: all 0.25s;
+}
+.calc-opt.active { border-color: var(--gold); color: var(--gold-bright); background: var(--ink-3); }
+.calc-addons { display: flex; flex-direction: column; gap: 10px; }
+.calc-addon {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--ink); border: 1px solid var(--line-soft); border-radius: 10px;
+  padding: 12px 16px; cursor: pointer; font-size: 14px; color: var(--ivory-dim); transition: border-color 0.25s;
+}
+.calc-addon:hover { border-color: var(--line); }
+.calc-addon.checked { border-color: var(--gold); color: var(--ivory); }
+.calc-addon input { accent-color: var(--gold); width: auto; }
+.calc-addon .price-tag { color: var(--gold); font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+.stepper { display: flex; align-items: center; gap: 16px; }
+.stepper button {
+  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line-soft);
+  background: var(--ink); color: var(--ivory); font-size: 16px; cursor: pointer;
+}
+.stepper button:hover { border-color: var(--gold); }
+.stepper span { font-family: var(--serif); font-size: 18px; min-width: 20px; text-align: center; }
+.calc-summary {
+  background: var(--ink-3); border: 1px solid var(--line); border-radius: 18px;
+  padding: 28px; align-self: start; position: sticky; top: 100px;
+}
+.calc-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ivory-faint); }
+.calc-total { font-family: var(--serif); font-size: clamp(30px, 3vw, 40px); color: var(--gold); margin: 8px 0 4px; }
+.calc-monthly { color: var(--ivory-dim); font-size: 14px; margin-bottom: 22px; min-height: 20px; }
+.calc-note { color: var(--ivory-faint); font-size: 12.5px; margin-top: 14px; text-align: center; }
+@media (max-width: 860px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .calc-summary { position: static; }
+}
+.calc-new-tag {
+  display: inline-block; background: var(--gold); color: var(--ink); font-family: var(--mono);
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 10px;
+  border-radius: 999px; margin-left: 10px; vertical-align: middle;
+}
+.calc-note-sub { font-size: 12px; color: var(--ivory-faint); margin-top: 4px; }
+.prestige-box {
+  margin-top: 24px; border: 1px solid var(--gold); border-radius: 14px; padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(212,177,116,.08), transparent);
+  display: flex; gap: 14px; align-items: flex-start; cursor: pointer;
+}
+.prestige-box input { width: auto; margin-top: 3px; accent-color: var(--gold); }
+.prestige-box h4 { font-size: 15px; color: var(--gold-bright); margin-bottom: 4px; }
+.prestige-box p { font-size: 13px; color: var(--ivory-dim); line-height: 1.6; }
+.enterprise-banner {
+  margin-top: 32px; border: 1px solid var(--line); border-radius: 20px; padding: 32px clamp(24px,3vw,40px);
+  display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
+  background: var(--ink-2);
+}
+.enterprise-banner h3 { font-size: 20px; margin-bottom: 6px; }
+.enterprise-banner p { color: var(--ivory-faint); font-size: 14px; }
+.req-form label { display: block; font-size: 12px; color: var(--ivory-faint); margin: 14px 0 5px; }
+.req-form input, .req-form textarea {
+  width: 100%; background: var(--ink); border: 1px solid var(--line-soft); border-radius: 9px;
+  padding: 11px 13px; color: var(--ivory); font-family: var(--sans); font-size: 14px;
+}
+.req-form input:focus, .req-form textarea:focus { outline: none; border-color: var(--gold); }
+.req-success { text-align: center; padding: 20px 0; }
+.req-success .tick { font-size: 32px; color: var(--gold); margin-bottom: 10px; }
+.calc-msg { font-size: 13px; margin-top: 10px; }
+.calc-msg.err { color: #e58b7a; }
 .price-card ul { list-style: none; margin-bottom: 34px; flex: 1; }
 .price-card li {
   padding: 11px 0 11px 30px;
@@ -1573,47 +1653,69 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
         <h2 class="section-title">Simple plans, no surprises.</h2>
         <p class="section-note">Every rupee accounted for, before we begin.</p>
       </div>
-      <div class="price-grid">
-        <article class="price-card reveal reveal-scale">
-          <h3>Starter</h3>
-          <p class="price"><span class="amount">₹8,000</span><span class="per">one-time</span></p>
-          <p class="price-desc">Perfect for getting your first website live.</p>
-          <ul>
-            <li>Up to 4 page sections</li>
-            <li>Mobile responsive design</li>
-            <li>Contact form integration</li>
-            <li>1 revision round</li>
-            <li>Basic SEO setup</li>
-          </ul>
-          <a href="#contact" class="btn btn-ghost btn-block">Get started <span class="arr">→</span></a>
-        </article>
-        <article class="price-card featured reveal reveal-scale d-2">
-          <span class="badge">Most popular</span>
-          <h3>Growth</h3>
-          <p class="price"><span class="amount">₹12,000</span><span class="per">+ ₹2,000/mo</span></p>
-          <p class="price-desc">Build fee plus full ongoing management.</p>
-          <ul>
-            <li>Full custom website</li>
-            <li>Domain + hosting managed</li>
-            <li>Monthly updates &amp; edits</li>
-            <li>SEO optimization</li>
-            <li>Priority 24h support</li>
-          </ul>
-          <a href="#contact" class="btn btn-gold btn-block">Get started <span class="arr">→</span></a>
-        </article>
-        <article class="price-card reveal reveal-scale d-3">
-          <h3>Enterprise</h3>
-          <p class="price"><span class="amount">Custom</span><span class="per">tailored quote</span></p>
-          <p class="price-desc">For businesses with complex requirements.</p>
-          <ul>
-            <li>Everything in Growth</li>
-            <li>E-commerce integration</li>
-            <li>Custom functionality</li>
-            <li>Analytics dashboard</li>
-            <li>Dedicated account manager</li>
-          </ul>
-          <a href="#contact" class="btn btn-ghost btn-block">Talk to us <span class="arr">→</span></a>
-        </article>
+      <div class="calc-box reveal reveal-scale" id="quoteCalc">
+        <h3>Build your own quote <span class="calc-new-tag">✦ New</span></h3>
+        <p>Our Growth-tier custom build, priced exactly to what you need — no guesswork.</p>
+        <div class="calc-grid">
+          <div class="calc-col">
+            <label>Base — Growth plan</label>
+            <div class="calc-options">
+              <button type="button" class="calc-opt active" disabled>Growth — ₹12,000 + ₹2,000/mo</button>
+            </div>
+
+            <label style="margin-top:24px">Extra page sections <span class="calc-note-sub">₹450 each</span></label>
+            <div class="stepper">
+              <button type="button" id="pageMinus">−</button>
+              <span id="pageCount">0</span>
+              <button type="button" id="pagePlus">+</button>
+            </div>
+
+            <label style="margin-top:24px">Add-ons</label>
+            <div class="calc-addons" id="calcAddons"></div>
+
+            <div class="prestige-box" id="prestigeBox">
+              <input type="checkbox" id="prestigeCheck">
+              <div>
+                <h4>Prestige Membership <span class="calc-new-tag">✦ New</span> — ₹2,800/yr</h4>
+                <p>Same-day priority support, 15% off every service above, and your first 3 extra pages free.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="calc-summary">
+            <div id="calcSummaryBody">
+              <span class="calc-label">Estimated total</span>
+              <div class="calc-total" id="calcOneTime">₹12,000</div>
+              <div class="calc-monthly" id="calcMonthly">+ ₹2,000/mo</div>
+              <button type="button" class="btn btn-gold btn-block" id="openReqForm">Request this quote →</button>
+              <p class="calc-note">Estimate only — we'll confirm final scope on a quick call.</p>
+            </div>
+            <form class="req-form" id="reqForm" style="display:none">
+              <label>Name</label>
+              <input type="text" id="reqName" required>
+              <label>WhatsApp number</label>
+              <input type="tel" id="reqWhatsapp" required placeholder="+91 …">
+              <label>Email</label>
+              <input type="email" id="reqEmail" required>
+              <label>Tell us about your needs</label>
+              <textarea id="reqMessage" rows="3" placeholder="Anything specific about your project…"></textarea>
+              <button type="submit" class="btn btn-gold btn-block" style="margin-top:16px">Send request</button>
+              <div class="calc-msg" id="reqMsg"></div>
+            </form>
+            <div class="req-success" id="reqSuccess" style="display:none">
+              <div class="tick">✓</div>
+              <p style="color:var(--ivory)">Thanks! We'll get back to you shortly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="enterprise-banner reveal reveal-scale">
+        <div>
+          <h3>Need something bigger?</h3>
+          <p>E-commerce, dashboards, multi-system integrations — Enterprise is a tailored quote.</p>
+        </div>
+        <a href="#contact" class="btn btn-ghost">Talk to us <span class="arr">→</span></a>
       </div>
       <article class="erestro reveal reveal-scale d-4" id="erestro">
         <span class="badge">New launch</span>
@@ -1775,7 +1877,141 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const sbPublic = supabase.createClient(
+  "https://ekqxrttxkntvcqyojfjq.supabase.co",
+  "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
+);
+
+// ---------- Quote calculator ----------
+const CALC = {
+  baseOneTime: 12000,
+  baseMonthly: 2000,
+  extraPage: 450,
+  prestigeFee: 2800,
+  prestigeDiscount: 0.15,
+  prestigeFreePages: 3,
+  addons: [
+    { id: "ecommerce", label: "E-commerce / online store", price: 6000, cycle: "onetime" },
+    { id: "logo", label: "Logo & brand identity", price: 1200, cycle: "onetime" },
+    { id: "booking", label: "Booking / reservation system", price: 5000, cycle: "onetime", note: "price may vary by scope" },
+    { id: "multilang", label: "Multi-language support", price: 400, cycle: "onetime" },
+    { id: "seo", label: "Advanced SEO & analytics", price: 1600, cycle: "onetime" },
+    { id: "social", label: "Social media management", price: 450, cycle: "monthly" },
+  ],
+};
+
+let pageCount = 0;
+const selectedAddons = new Set();
+
+const addonsBox = document.getElementById("calcAddons");
+if (addonsBox) {
+  addonsBox.innerHTML = CALC.addons
+    .map(
+      (a) => `
+    <label class="calc-addon" for="addon-${a.id}">
+      <span><input type="checkbox" id="addon-${a.id}" data-id="${a.id}"> ${a.label}${a.note ? ` <span class="calc-note-sub">(${a.note})</span>` : ""}</span>
+      <span class="price-tag">₹${a.price.toLocaleString("en-IN")}${a.cycle === "monthly" ? "/mo" : ""}</span>
+    </label>`
+    )
+    .join("");
+
+  addonsBox.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    cb.addEventListener("change", () => {
+      cb.closest(".calc-addon").classList.toggle("checked", cb.checked);
+      cb.checked ? selectedAddons.add(cb.dataset.id) : selectedAddons.delete(cb.dataset.id);
+      recalc();
+    });
+  });
+
+  document.getElementById("pageMinus").addEventListener("click", () => {
+    pageCount = Math.max(0, pageCount - 1);
+    document.getElementById("pageCount").textContent = pageCount;
+    recalc();
+  });
+  document.getElementById("pagePlus").addEventListener("click", () => {
+    pageCount++;
+    document.getElementById("pageCount").textContent = pageCount;
+    recalc();
+  });
+  document.getElementById("prestigeCheck").addEventListener("change", recalc);
+}
+
+function computeQuote() {
+  const prestige = document.getElementById("prestigeCheck").checked;
+  let oneTime = CALC.baseOneTime;
+  let monthly = CALC.baseMonthly;
+  const lines = [];
+
+  const chargeablePages = Math.max(0, pageCount - (prestige ? CALC.prestigeFreePages : 0));
+  if (pageCount > 0) {
+    oneTime += chargeablePages * CALC.extraPage;
+    lines.push(`${pageCount} extra page(s)${prestige && pageCount > chargeablePages ? ` (${Math.min(pageCount, CALC.prestigeFreePages)} free — Prestige)` : ""}`);
+  }
+
+  CALC.addons.forEach((a) => {
+    if (!selectedAddons.has(a.id)) return;
+    if (a.cycle === "monthly") monthly += a.price;
+    else oneTime += a.price;
+    lines.push(a.label);
+  });
+
+  if (prestige) {
+    oneTime = Math.round(oneTime * (1 - CALC.prestigeDiscount));
+    monthly = Math.round(monthly * (1 - CALC.prestigeDiscount));
+    lines.push("Prestige Membership (₹2,800/yr — 15% discount applied)");
+  }
+
+  return { oneTime, monthly, prestige, lines };
+}
+
+function recalc() {
+  const q = computeQuote();
+  document.getElementById("calcOneTime").textContent = `₹${q.oneTime.toLocaleString("en-IN")}`;
+  document.getElementById("calcMonthly").textContent =
+    `+ ₹${q.monthly.toLocaleString("en-IN")}/mo` + (q.prestige ? ` · + ₹2,800/yr Prestige` : "");
+}
+
+if (addonsBox) recalc();
+
+// ---------- Request this quote → CSR ----------
+const openReqBtn = document.getElementById("openReqForm");
+if (openReqBtn) {
+  openReqBtn.addEventListener("click", () => {
+    document.getElementById("calcSummaryBody").style.display = "none";
+    document.getElementById("reqForm").style.display = "block";
+  });
+
+  document.getElementById("reqForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("reqMsg");
+    msg.className = "calc-msg";
+    msg.textContent = "";
+    const q = computeQuote();
+    const payload = {
+      name: document.getElementById("reqName").value.trim(),
+      whatsapp: document.getElementById("reqWhatsapp").value.trim(),
+      email: document.getElementById("reqEmail").value.trim(),
+      message: document.getElementById("reqMessage").value.trim(),
+      plan_summary: "Growth — " + (q.lines.join(", ") || "no add-ons"),
+      estimate_onetime: `₹${q.oneTime.toLocaleString("en-IN")}`,
+      estimate_monthly: `₹${q.monthly.toLocaleString("en-IN")}/mo`,
+      prestige: q.prestige,
+    };
+    const { error } = await sbPublic.from("service_requests").insert(payload);
+    if (error) {
+      msg.className = "calc-msg err";
+      msg.textContent = "Something went wrong — please try again or use the contact form below.";
+      return;
+    }
+    document.getElementById("reqForm").style.display = "none";
+    document.getElementById("reqSuccess").style.display = "block";
+  });
+}
+</script>
+<script>
+
 /* ============================================================
    COVARA GLOBAL — single-file script
    ============================================================ */
