@@ -4,17 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Dashboard — Covara Global</title>
+<meta name="description" content="Covara Global client dashboard — view your services, renewal dates, and notifications.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230b0a08'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-size='58' fill='%23d4b174' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{--ink:#0b0a08;--ink-2:#12100d;--ink-3:#1a1712;--ivory:#f4efe6;--ivory-dim:rgba(244,239,230,.62);--ivory-faint:rgba(244,239,230,.4);--gold:#d4b174;--gold-bright:#e8cd96;--line:rgba(212,177,116,.16);--serif:"Fraunces",Georgia,serif;--sans:"Manrope",sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--ink);color:var(--ivory);font-family:var(--sans);min-height:100vh}
+  html{overflow-x:hidden}
+  body{background:var(--ink);color:var(--ivory);font-family:var(--sans);overflow-x:hidden;min-height:100vh}
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,4vw,48px);border-bottom:1px solid var(--line)}
   .logo{font-family:var(--serif);font-size:20px;color:var(--ivory);text-decoration:none}
   .logo span{color:var(--gold)}
   .topbar-right{display:flex;align-items:center;gap:18px;font-size:14px}
   .topbar-right a,.topbar-right button{color:var(--ivory-dim);text-decoration:none;background:none;border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:var(--sans);cursor:pointer;font-size:13.5px}
   .topbar-right button:hover,.topbar-right a:hover{color:var(--ivory);border-color:var(--gold)}
+  @media (max-width:600px){
+    .topbar{flex-wrap:wrap;gap:10px}
+    #emailTag{display:none}
+    .pkg-top{flex-direction:column}
+    .meta{gap:14px}
+  }
   main{max-width:900px;margin:0 auto;padding:clamp(32px,5vw,56px) clamp(20px,4vw,48px)}
   h1{font-family:var(--serif);font-weight:450;font-size:clamp(28px,3vw,38px);margin-bottom:6px}
   .welcome{color:var(--ivory-dim);margin-bottom:36px;font-size:15px}
@@ -41,7 +51,7 @@
   .bell-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:8px 12px;color:var(--ivory-dim);cursor:pointer;font-size:15px;position:relative}
   .bell-btn:hover{color:var(--ivory);border-color:var(--gold)}
   .bell-dot{position:absolute;top:-4px;right:-4px;background:#e58b7a;color:#1a0d0a;font-size:10px;font-weight:700;border-radius:999px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 3px}
-  .bell-panel{position:absolute;right:0;top:calc(100% + 10px);width:320px;max-height:380px;overflow-y:auto;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:10px;display:none;z-index:50}
+  .bell-panel{position:absolute;right:0;top:calc(100% + 10px);width:min(320px, 88vw);max-height:380px;overflow-y:auto;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:10px;display:none;z-index:50}
   .bell-panel.open{display:block}
   .notif-item{padding:12px;border-bottom:1px solid var(--line);font-size:13.5px}
   .notif-item:last-child{border-bottom:none}

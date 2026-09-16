@@ -4,11 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Covara Global</title>
+<meta name="description" content="Covara Global admin portal — manage clients, services, and requests.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230b0a08'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-size='58' fill='%23d4b174' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{--ink:#0b0a08;--ink-2:#12100d;--ink-3:#1a1712;--ivory:#f4efe6;--ivory-dim:rgba(244,239,230,.62);--ivory-faint:rgba(244,239,230,.4);--gold:#d4b174;--gold-bright:#e8cd96;--line:rgba(212,177,116,.16);--serif:"Fraunces",Georgia,serif;--sans:"Manrope",sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--ink);color:var(--ivory);font-family:var(--sans);min-height:100vh}
+  html{overflow-x:hidden}
+  body{background:var(--ink);color:var(--ivory);font-family:var(--sans);overflow-x:hidden;min-height:100vh}
   .shell{display:flex;min-height:100vh}
   .sidebar{width:220px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column}
   .logo{font-family:var(--serif);font-size:19px;color:var(--ivory);text-decoration:none;padding:0 10px;margin-bottom:6px}
@@ -67,6 +71,18 @@
   .notif-log .n{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px}
   .notif-log .n small{display:block;color:var(--ivory-faint);margin-top:4px}
   #gate{padding:60px;text-align:center;color:var(--ivory-dim)}
+  .mobile-topbar{display:none}
+  @media (max-width:860px){
+    .shell{flex-direction:column}
+    .mobile-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+    .mobile-topbar .logo{margin:0}
+    .hamburger{background:none;border:1px solid var(--line);border-radius:8px;color:var(--ivory);font-size:18px;padding:6px 12px;cursor:pointer}
+    .sidebar{width:100%;position:fixed;inset:0;z-index:100;background:var(--ink);transform:translateX(-100%);transition:transform .3s var(--ease,ease);overflow-y:auto}
+    .sidebar.open{transform:translateX(0)}
+    .sidebar .logo{display:none}
+    main{max-width:100%;padding:20px}
+    .grid2{grid-template-columns:1fr}
+  }
   .csr-badge{background:#e58b7a;color:#1a0d0a;font-size:10px;font-weight:700;border-radius:999px;min-width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;margin-left:auto}
   .csr-card{background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
   .csr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
@@ -86,7 +102,11 @@
 <div id="gate">Checking admin access…</div>
 
 <div class="shell" id="app" style="display:none">
-  <div class="sidebar">
+  <div class="mobile-topbar">
+    <a href="index.html" class="logo">Covara<span>.</span><span class="badge-admin">Admin</span></a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">☰</button>
+  </div>
+  <div class="sidebar" id="sidebarEl">
     <a href="index.html" class="logo">Covara<span>.</span><span class="badge-admin">Admin</span></a>
     <nav class="side-nav">
       <button class="active" data-view="info">🔎 Customer Information</button>
@@ -236,8 +256,17 @@ document.querySelectorAll(".side-nav button").forEach((btn) => {
     document.querySelectorAll(".panel-view").forEach((v) => v.classList.remove("active"));
     btn.classList.add("active");
     document.getElementById("view-" + btn.dataset.view).classList.add("active");
+    document.getElementById("sidebarEl").classList.remove("open");
   });
 });
+
+// ---------- mobile menu toggle ----------
+const hamburgerBtn = document.getElementById("hamburgerBtn");
+if (hamburgerBtn) {
+  hamburgerBtn.addEventListener("click", () => {
+    document.getElementById("sidebarEl").classList.toggle("open");
+  });
+}
 
 // ---------- generic customer search ----------
 async function searchCustomers(term) {

@@ -1884,7 +1884,6 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
           <span>What do you need?</span>
           <select name="service" required>
             <option value="" disabled selected>Select a service</option>
-            <option>Starter website (₹8,000)</option>
             <option>Growth package (₹12,000 + ₹2k/mo)</option>
             <option>E-Restro — Restaurants &amp; Cafés (₹4,000)</option>
             <option>Student Portfolio Website (₹300/mo)</option>
@@ -1898,6 +1897,7 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
         </label>
         <button type="submit" class="btn btn-gold btn-block">Send consultation request <span class="arr">→</span></button>
         <p class="form-note">This opens your email app with everything pre-filled — one tap to send.</p>
+        <p class="calc-msg" id="contactFormMsg" style="display:none"></p>
       </form>
     </div>
   </section>
@@ -2389,6 +2389,13 @@ document.getElementById("referralApply").addEventListener("click", () => {
 document.getElementById("contactForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const f = e.target;
+  const msg = document.getElementById("contactFormMsg");
+  if (!f.name.value.trim() || !f.contact.value.trim() || !f.service.value) {
+    msg.style.display = "block";
+    msg.className = "calc-msg err";
+    msg.textContent = "Please fill in your name, contact, and service before sending.";
+    return;
+  }
   const subject = `New project inquiry — ${f.service.value || "General"}`;
   const bodyLines = [
     `Name: ${f.name.value}`,
@@ -2402,6 +2409,10 @@ document.getElementById("contactForm").addEventListener("submit", (e) => {
     encodeURIComponent(subject) +
     "&body=" +
     encodeURIComponent(bodyLines.join("\n"));
+  msg.style.display = "block";
+  msg.className = "calc-msg";
+  msg.style.color = "var(--gold-bright)";
+  msg.textContent = "✓ Opening your email app now — just hit send there.";
 });
 </script>
 </body>
