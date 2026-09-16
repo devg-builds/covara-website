@@ -76,6 +76,7 @@
   .csr-price{font-family:var(--serif);color:var(--gold);font-size:16px;text-align:right}
   .csr-msg{margin-top:12px;font-size:13.5px;color:var(--ivory-dim);border-top:1px solid var(--line);padding-top:12px}
   .csr-plan{font-size:12.5px;color:var(--ivory-faint);margin-top:4px}
+  .csr-referral{display:inline-block;margin-top:8px;font-size:11.5px;font-weight:700;color:var(--gold-bright);border:1px solid var(--gold);border-radius:999px;padding:3px 12px}
   .csr-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
   .csr-when{font-size:12px;color:var(--ivory-faint)}
   .csr-status-select{width:auto;padding:6px 10px;font-size:12.5px}
@@ -467,6 +468,7 @@ async function loadCsr() {
             ${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}
           </div>
           <div class="csr-plan">${esc(r.plan_summary)}</div>
+          ${r.referral_code ? `<span class="csr-referral">✓ Referral ${esc(r.referral_code)} — 15% off applied</span>` : ""}
         </div>
         <div class="csr-price">${esc(r.estimate_onetime)}<br><span style="font-size:12.5px;color:var(--ivory-dim)">${esc(r.estimate_monthly)}</span></div>
       </div>

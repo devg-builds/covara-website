@@ -980,6 +980,44 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
 .req-success .tick { font-size: 32px; color: var(--gold); margin-bottom: 10px; }
 .calc-msg { font-size: 13px; margin-top: 10px; }
 .calc-msg.err { color: #e58b7a; }
+.ref-row { display: flex; gap: 8px; margin-top: 4px; }
+.ref-row input { flex: 1; text-transform: uppercase; letter-spacing: 0.04em; }
+.btn-mini { background: var(--ink-3); border: 1px solid var(--gold); color: var(--gold-bright); border-radius: 9px; padding: 0 16px; font-family: var(--sans); font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.25s; white-space: nowrap; }
+.btn-mini:hover { background: var(--gold); color: var(--ink); }
+.ref-result { font-size: 13px; margin-top: 8px; min-height: 0; font-family: var(--serif); }
+.ref-result.show-success { color: var(--gold-bright); animation: refPop 0.5s var(--ease); }
+.ref-result.show-error { color: #e58b7a; animation: refShake 0.4s ease; }
+@keyframes refPop { 0% { opacity: 0; transform: translateY(6px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes refShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ---- elegant calculator polish ---- */
+.calc-box { position: relative; overflow: hidden; }
+.calc-glow {
+  position: absolute; inset: -2px; z-index: 0; pointer-events: none; opacity: 0.5;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(212,177,116,.35) 8%, transparent 18%, transparent 100%);
+  animation: calcSpin 7s linear infinite;
+}
+.calc-box > *:not(.calc-glow) { position: relative; z-index: 1; }
+@keyframes calcSpin { to { transform: rotate(360deg); } }
+.opt-icon { margin-right: 4px; }
+.addon-icon { margin: 0 6px 0 2px; }
+.calc-addon { transition: transform 0.25s var(--ease), border-color 0.25s, background 0.25s; }
+.calc-addon.checked { background: rgba(212,177,116,.06); transform: translateX(3px); }
+.calc-total { display: flex; align-items: baseline; gap: 2px; }
+.calc-total span:first-child { font-size: 0.6em; color: var(--gold-bright); }
+.shine { position: relative; overflow: hidden; }
+.shine::after {
+  content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
+  transform: skewX(-20deg); animation: shineSweep 3.2s ease-in-out infinite;
+}
+@keyframes shineSweep { 0% { left: -60%; } 40%, 100% { left: 130%; } }
+.prestige-box { transition: box-shadow 0.4s var(--ease), border-color 0.4s; }
+.prestige-box:has(#prestigeCheck:checked) { box-shadow: 0 0 24px rgba(212,177,116,.25); border-color: var(--gold-bright); }
+.stepper span { transition: transform 0.2s var(--ease); }
+@media (prefers-reduced-motion: reduce) {
+  .calc-glow, .shine::after { animation: none; }
+}
 .price-card ul { list-style: none; margin-bottom: 34px; flex: 1; }
 .price-card li {
   padding: 11px 0 11px 30px;
@@ -1653,14 +1691,15 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
         <h2 class="section-title">Simple plans, no surprises.</h2>
         <p class="section-note">Every rupee accounted for, before we begin.</p>
       </div>
-      <div class="calc-box reveal reveal-scale" id="quoteCalc">
+      <div class="calc-box reveal reveal-scale tilt-glow" id="quoteCalc">
+        <div class="calc-glow"></div>
         <h3>Build your own quote <span class="calc-new-tag">✦ New</span></h3>
         <p>Our Growth-tier custom build, priced exactly to what you need — no guesswork.</p>
         <div class="calc-grid">
           <div class="calc-col">
             <label>Base — Growth plan</label>
             <div class="calc-options">
-              <button type="button" class="calc-opt active" disabled>Growth — ₹12,000 + ₹2,000/mo</button>
+              <button type="button" class="calc-opt active" disabled><span class="opt-icon">✦</span> Growth — ₹12,000 + ₹2,000/mo</button>
             </div>
 
             <label style="margin-top:24px">Extra page sections <span class="calc-note-sub">₹450 each</span></label>
@@ -1685,9 +1724,9 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
           <div class="calc-summary">
             <div id="calcSummaryBody">
               <span class="calc-label">Estimated total</span>
-              <div class="calc-total" id="calcOneTime">₹12,000</div>
+              <div class="calc-total"><span>₹</span><span id="calcOneTime">12,000</span></div>
               <div class="calc-monthly" id="calcMonthly">+ ₹2,000/mo</div>
-              <button type="button" class="btn btn-gold btn-block" id="openReqForm">Request this quote →</button>
+              <button type="button" class="btn btn-gold btn-block shine" id="openReqForm">Request this quote →</button>
               <p class="calc-note">Estimate only — we'll confirm final scope on a quick call.</p>
             </div>
             <form class="req-form" id="reqForm" style="display:none">
@@ -1699,6 +1738,12 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
               <input type="email" id="reqEmail" required>
               <label>Tell us about your needs</label>
               <textarea id="reqMessage" rows="3" placeholder="Anything specific about your project…"></textarea>
+              <label>Creator referral code <span class="calc-note-sub">(optional)</span></label>
+              <div class="ref-row">
+                <input type="text" id="reqReferral" placeholder="e.g. NAME15" autocomplete="off">
+                <button type="button" id="reqReferralApply" class="btn-mini">Apply</button>
+              </div>
+              <div class="ref-result" id="reqReferralResult"></div>
               <button type="submit" class="btn btn-gold btn-block" style="margin-top:16px">Send request</button>
               <div class="calc-msg" id="reqMsg"></div>
             </form>
@@ -1887,12 +1932,12 @@ const CALC = {
   prestigeDiscount: 0.15,
   prestigeFreePages: 3,
   addons: [
-    { id: "ecommerce", label: "E-commerce / online store", price: 6000, cycle: "onetime" },
-    { id: "logo", label: "Logo & brand identity", price: 1200, cycle: "onetime" },
-    { id: "booking", label: "Booking / reservation system", price: 5000, cycle: "onetime", note: "price may vary by scope" },
-    { id: "multilang", label: "Multi-language support", price: 400, cycle: "onetime" },
-    { id: "seo", label: "Advanced SEO & analytics", price: 1600, cycle: "onetime" },
-    { id: "social", label: "Social media management", price: 450, cycle: "monthly" },
+    { id: "ecommerce", label: "E-commerce / online store", price: 6000, cycle: "onetime", icon: "🛒" },
+    { id: "logo", label: "Logo & brand identity", price: 1200, cycle: "onetime", icon: "🎨" },
+    { id: "booking", label: "Booking / reservation system", price: 5000, cycle: "onetime", note: "price may vary by scope", icon: "📅" },
+    { id: "multilang", label: "Multi-language support", price: 400, cycle: "onetime", icon: "🌐" },
+    { id: "seo", label: "Advanced SEO & analytics", price: 1600, cycle: "onetime", icon: "📈" },
+    { id: "social", label: "Social media management", price: 450, cycle: "monthly", icon: "📣" },
   ],
 };
 
@@ -1905,7 +1950,7 @@ if (addonsBox) {
     .map(
       (a) => `
     <label class="calc-addon" for="addon-${a.id}">
-      <span><input type="checkbox" id="addon-${a.id}" data-id="${a.id}"> ${a.label}${a.note ? ` <span class="calc-note-sub">(${a.note})</span>` : ""}</span>
+      <span><input type="checkbox" id="addon-${a.id}" data-id="${a.id}"><span class="addon-icon">${a.icon}</span> ${a.label}${a.note ? ` <span class="calc-note-sub">(${a.note})</span>` : ""}</span>
       <span class="price-tag">₹${a.price.toLocaleString("en-IN")}${a.cycle === "monthly" ? "/mo" : ""}</span>
     </label>`
     )
@@ -1960,9 +2005,24 @@ function computeQuote() {
   return { oneTime, monthly, prestige, lines };
 }
 
+let displayedOneTime = CALC.baseOneTime;
+function animateTo(el, from, to) {
+  const duration = 500;
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(from + (to - from) * eased).toLocaleString("en-IN");
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
 function recalc() {
   const q = computeQuote();
-  document.getElementById("calcOneTime").textContent = `₹${q.oneTime.toLocaleString("en-IN")}`;
+  const el = document.getElementById("calcOneTime");
+  animateTo(el, displayedOneTime, q.oneTime);
+  displayedOneTime = q.oneTime;
   document.getElementById("calcMonthly").textContent =
     `+ ₹${q.monthly.toLocaleString("en-IN")}/mo` + (q.prestige ? ` · + ₹2,800/yr Prestige` : "");
 }
@@ -1970,6 +2030,29 @@ function recalc() {
 if (addonsBox) recalc();
 
 // ---------- Request this quote → CSR ----------
+const VALID_CREATOR_CODE = "HARSHIL15";
+let validReferralCode = null;
+
+const reqReferralApply = document.getElementById("reqReferralApply");
+if (reqReferralApply) {
+  reqReferralApply.addEventListener("click", () => {
+    const input = document.getElementById("reqReferral");
+    const result = document.getElementById("reqReferralResult");
+    const code = input.value.trim().toUpperCase();
+    result.classList.remove("show-success", "show-error");
+    void result.offsetWidth;
+    if (code && code === VALID_CREATOR_CODE) {
+      validReferralCode = code;
+      result.textContent = `🎉 Code applied — 15% discount unlocked!`;
+      result.classList.add("show-success");
+    } else {
+      validReferralCode = null;
+      result.textContent = "That code isn't valid — check with your creator and try again.";
+      result.classList.add("show-error");
+    }
+  });
+}
+
 const openReqBtn = document.getElementById("openReqForm");
 if (openReqBtn) {
   openReqBtn.addEventListener("click", () => {
@@ -1983,15 +2066,22 @@ if (openReqBtn) {
     msg.className = "calc-msg";
     msg.textContent = "";
     const q = computeQuote();
+    let oneTime = q.oneTime;
+    let monthly = q.monthly;
+    if (validReferralCode) {
+      oneTime = Math.round(oneTime * 0.85);
+      monthly = Math.round(monthly * 0.85);
+    }
     const payload = {
       name: document.getElementById("reqName").value.trim(),
       whatsapp: document.getElementById("reqWhatsapp").value.trim(),
       email: document.getElementById("reqEmail").value.trim(),
       message: document.getElementById("reqMessage").value.trim(),
       plan_summary: "Growth — " + (q.lines.join(", ") || "no add-ons"),
-      estimate_onetime: `₹${q.oneTime.toLocaleString("en-IN")}`,
-      estimate_monthly: `₹${q.monthly.toLocaleString("en-IN")}/mo`,
+      estimate_onetime: `₹${oneTime.toLocaleString("en-IN")}`,
+      estimate_monthly: `₹${monthly.toLocaleString("en-IN")}/mo`,
       prestige: q.prestige,
+      referral_code: validReferralCode || undefined,
     };
     const { error } = await (async () => {
       try {
