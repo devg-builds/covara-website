@@ -216,6 +216,14 @@ const sb = supabase.createClient(
   "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
 );
 
+// Escape any user-supplied text before it goes into innerHTML — prevents a
+// malicious signup name / CSR message / notification from running as script
+// in the admin's authenticated session.
+function esc(str) {
+  if (str === null || str === undefined) return "";
+  return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
 let session;
 let assignSelected = null;
 let notifSelected = null;
@@ -256,7 +264,7 @@ function wireSearch(inputId, resultsId, onPick) {
         return;
       }
       results.innerHTML = list
-        .map((c) => `<div class="r" data-id="${c.id}">${c.full_name || c.email}<small>${c.email}</small></div>`)
+        .map((c) => `<div class="r" data-id="${c.id}">${esc(c.full_name || c.email)}<small>${esc(c.email)}</small></div>`)
         .join("");
       results.classList.add("open");
       results.querySelectorAll(".r").forEach((el, i) => {
@@ -286,11 +294,11 @@ wireSearch("infoSearch", "infoResults", async (customer) => {
   const active = (pkgs || []).filter((p) => p.status !== "expired");
 
   document.getElementById("infoDisplay").innerHTML = `
-    <div class="info-row"><span>Name</span><span>${full.full_name || "—"}</span></div>
-    <div class="info-row"><span>Email</span><span>${full.email}</span></div>
+    <div class="info-row"><span>Name</span><span>${esc(full.full_name) || "—"}</span></div>
+    <div class="info-row"><span>Email</span><span>${esc(full.email)}</span></div>
     <div class="info-row"><span>Account created</span><span>${full.created_at ? new Date(full.created_at).toLocaleDateString() : "—"}</span></div>
-    <div class="info-row"><span>Active services</span><span>${active.length === 0 ? "None" : active.map((p) => p.service_name).join(", ")}</span></div>
-    ${unpaid.length > 0 ? `<div class="alert-box">⚠ Payment pending for: ${unpaid.map((p) => p.service_name).join(", ")}</div>` : ""}
+    <div class="info-row"><span>Active services</span><span>${active.length === 0 ? "None" : esc(active.map((p) => p.service_name).join(", "))}</span></div>
+    ${unpaid.length > 0 ? `<div class="alert-box">⚠ Payment pending for: ${esc(unpaid.map((p) => p.service_name).join(", "))}</div>` : ""}
   `;
 });
 
@@ -299,7 +307,7 @@ wireSearch("assignSearch", "assignResults", async (customer) => {
   const full = await fetchFullProfile(customer.id);
   assignSelected = full;
   document.getElementById("assignSelectedChip").innerHTML = `
-    <div class="selected-chip">${full.full_name || full.email} — ${full.email}
+    <div class="selected-chip">${esc(full.full_name || full.email)} — ${esc(full.email)}
       <button type="button" onclick="clearAssignSelection()">✕</button>
     </div>`;
   document.getElementById("assignArea").style.display = "block";
@@ -324,7 +332,7 @@ async function loadCurrentServices() {
     .map(
       (p) => `
     <div class="svc-item">
-      <div>${p.service_name} <span class="status ${p.status}">${p.status}</span></div>
+      <div>${esc(p.service_name)} <span class="status ${esc(p.status)}">${esc(p.status)}</span></div>
       <button class="rowbtn" onclick="removeService('${p.id}')">Remove</button>
     </div>`
     )
@@ -378,7 +386,7 @@ document.querySelectorAll('input[name="notifTarget"]').forEach((r) =>
 wireSearch("notifSearch", "notifResults", (customer) => {
   notifSelected = customer;
   document.getElementById("notifSelectedChip").innerHTML = `
-    <div class="selected-chip">${customer.full_name || customer.email}
+    <div class="selected-chip">${esc(customer.full_name || customer.email)}
       <button type="button" onclick="clearNotifSelection()">✕</button>
     </div>`;
 });
@@ -424,7 +432,7 @@ async function loadNotifLog() {
   const log = document.getElementById("notifLog");
   log.innerHTML = (data || [])
     .map(
-      (n) => `<div class="n">${n.message}<small>${n.user_id ? "To: " + (n.profiles?.full_name || n.profiles?.email) : "Broadcast — everyone"} · ${new Date(n.created_at).toLocaleString()}</small></div>`
+      (n) => `<div class="n">${esc(n.message)}<small>${n.user_id ? "To: " + esc(n.profiles?.full_name || n.profiles?.email) : "Broadcast — everyone"} · ${new Date(n.created_at).toLocaleString()}</small></div>`
     )
     .join("") || `<p style="color:var(--ivory-faint);font-size:13.5px">No notifications sent yet.</p>`;
 }
@@ -453,16 +461,16 @@ async function loadCsr() {
     <div class="csr-card">
       <div class="csr-top">
         <div>
-          <h3>${r.name || "—"}</h3>
+          <h3>${esc(r.name) || "—"}</h3>
           <div class="csr-contact">
-            ${r.whatsapp ? `<a href="https://wa.me/${r.whatsapp.replace(/\D/g, "")}" target="_blank">WhatsApp: ${r.whatsapp}</a>` : ""}
-            ${r.email ? `<a href="mailto:${r.email}">${r.email}</a>` : ""}
+            ${r.whatsapp ? `<a href="https://wa.me/${esc(r.whatsapp.replace(/\D/g, ""))}" target="_blank">WhatsApp: ${esc(r.whatsapp)}</a>` : ""}
+            ${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}
           </div>
-          <div class="csr-plan">${r.plan_summary || ""}</div>
+          <div class="csr-plan">${esc(r.plan_summary)}</div>
         </div>
-        <div class="csr-price">${r.estimate_onetime || ""}<br><span style="font-size:12.5px;color:var(--ivory-dim)">${r.estimate_monthly || ""}</span></div>
+        <div class="csr-price">${esc(r.estimate_onetime)}<br><span style="font-size:12.5px;color:var(--ivory-dim)">${esc(r.estimate_monthly)}</span></div>
       </div>
-      ${r.message ? `<div class="csr-msg">"${r.message}"</div>` : ""}
+      ${r.message ? `<div class="csr-msg">"${esc(r.message)}"</div>` : ""}
       <div class="csr-foot">
         <span class="csr-when">${new Date(r.created_at).toLocaleString()}</span>
         <select class="csr-status-select" data-id="${r.id}">

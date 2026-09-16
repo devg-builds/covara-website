@@ -4,18 +4,22 @@ const SUPABASE_URL = "https://ekqxrttxkntvcqyojfjq.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ";
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const SITE_URL = "https://covara-website.vercel.app";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   if (!SERVICE_ROLE_KEY) {
-    return res.status(500).json({ error: "Server missing SUPABASE_SERVICE_ROLE_KEY env var" });
+    console.error("impersonate: SUPABASE_SERVICE_ROLE_KEY not set");
+    return res.status(500).json({ error: "Server misconfigured" });
   }
 
   const token = (req.headers.authorization || "").replace("Bearer ", "");
   if (!token) return res.status(401).json({ error: "Missing session token" });
 
-  const { targetEmail } = req.body || {};
-  if (!targetEmail) return res.status(400).json({ error: "targetEmail is required" });
+  const targetEmail = String((req.body || {}).targetEmail || "").trim();
+  if (!targetEmail || !EMAIL_RE.test(targetEmail)) {
+    return res.status(400).json({ error: "A valid targetEmail is required" });
+  }
 
   // Verify the caller is a signed-in admin, using THEIR token (RLS-scoped, no elevated access here)
   const callerClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -38,7 +42,11 @@ module.exports = async (req, res) => {
     email: targetEmail,
     options: { redirectTo: `${SITE_URL}/dashboard.html` },
   });
-  if (linkErr) return res.status(400).json({ error: linkErr.message });
+  if (linkErr) {
+    console.error("impersonate: generateLink failed:", linkErr.message);
+    return res.status(400).json({ error: "Could not generate a login link for that email." });
+  }
 
   return res.status(200).json({ link: linkData.properties.action_link });
 };
+

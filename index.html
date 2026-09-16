@@ -1877,14 +1877,8 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const sbPublic = supabase.createClient(
-  "https://ekqxrttxkntvcqyojfjq.supabase.co",
-  "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
-);
 
-// ---------- Quote calculator ----------
 const CALC = {
   baseOneTime: 12000,
   baseMonthly: 2000,
@@ -1999,10 +1993,23 @@ if (openReqBtn) {
       estimate_monthly: `₹${q.monthly.toLocaleString("en-IN")}/mo`,
       prestige: q.prestige,
     };
-    const { error } = await sbPublic.from("service_requests").insert(payload);
+    const { error } = await (async () => {
+      try {
+        const res = await fetch("/api/submit-request", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) return { error: data.error || "Request failed." };
+        return { error: null };
+      } catch {
+        return { error: "Network error — please try again." };
+      }
+    })();
     if (error) {
       msg.className = "calc-msg err";
-      msg.textContent = "Something went wrong — please try again or use the contact form below.";
+      msg.textContent = error;
       return;
     }
     document.getElementById("reqForm").style.display = "none";

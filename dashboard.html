@@ -80,6 +80,11 @@ const sb = supabase.createClient(
   "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
 );
 
+function esc(str) {
+  if (str === null || str === undefined) return "";
+  return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
 function dueInfo(dueDate) {
   if (!dueDate) return { text: "No due date set", cls: "due-ok" };
   const days = Math.ceil((new Date(dueDate) - new Date()) / 86400000);
@@ -117,16 +122,16 @@ function dueInfo(dueDate) {
       <div class="pkg">
         <div class="pkg-top">
           <div>
-            <h3>${p.service_name}</h3>
-            ${p.plan_price ? `<div class="price">${p.plan_price}</div>` : ""}
+            <h3>${esc(p.service_name)}</h3>
+            ${p.plan_price ? `<div class="price">${esc(p.plan_price)}</div>` : ""}
           </div>
-          <span class="status ${p.status}">${p.status}</span>
+          <span class="status ${esc(p.status)}">${esc(p.status)}</span>
         </div>
         <div class="meta">
           ${p.start_date ? `<div>Started<b>${new Date(p.start_date).toLocaleDateString()}</b></div>` : ""}
         </div>
         <div class="due-badge ${due.cls}">${due.text}</div>
-        ${p.notes ? `<div class="notes">${p.notes}</div>` : ""}
+        ${p.notes ? `<div class="notes">${esc(p.notes)}</div>` : ""}
       </div>`;
     })
     .join("");
@@ -159,7 +164,7 @@ async function loadNotifications(userId) {
       ? `<div class="notif-empty">No notifications yet.</div>`
       : list
           .map(
-            (n) => `<div class="notif-item">${n.message}<div class="when">${new Date(n.created_at).toLocaleString()}</div></div>`
+            (n) => `<div class="notif-item">${esc(n.message)}<div class="when">${new Date(n.created_at).toLocaleString()}</div></div>`
           )
           .join("");
 
