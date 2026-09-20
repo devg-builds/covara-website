@@ -1707,26 +1707,26 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
       </div>
       <div class="svc-sub reveal"><h3>Choose a package</h3></div>
       <div class="svc-grid">
-        <article class="svc-card featured reveal reveal-scale" data-svc="growth" data-label="Growth Website Package" data-onetime="12000" data-monthly="2000">
+        <article class="svc-card featured reveal reveal-scale">
           <span class="badge">Most popular</span>
           <h4>Growth Website Package</h4>
           <p class="svc-price"><span class="amount">₹12,000</span><span class="per">+ ₹2,000/mo</span></p>
           <p class="svc-desc">Full custom website, domain + hosting managed, monthly updates, SEO optimization, priority support.</p>
-          <button type="button" class="btn btn-gold btn-block add-to-cart">Add to cart</button>
+          <button type="button" class="btn btn-gold btn-block add-to-cart" data-svc="growth" data-label="Growth Website Package" data-onetime="12000" data-monthly="2000">Add to cart</button>
         </article>
-        <article class="svc-card reveal reveal-scale d-2" data-svc="erestro" data-label="E-Restro — Restaurants &amp; Cafés" data-onetime="4000" data-monthly="0">
+        <article class="svc-card reveal reveal-scale d-2">
           <span class="badge">New launch</span>
           <h4>E-Restro</h4>
           <p class="svc-price"><span class="amount">₹4,000</span><span class="per">one-time · full launch</span></p>
           <p class="svc-desc">Website, digital menu with QR scanner, social assets, and full launch support for restaurants &amp; cafés.</p>
-          <button type="button" class="btn btn-gold btn-block add-to-cart">Add to cart</button>
+          <button type="button" class="btn btn-gold btn-block add-to-cart" data-svc="erestro" data-label="E-Restro — Restaurants &amp; Cafés" data-onetime="4000" data-monthly="0">Add to cart</button>
         </article>
-        <article class="svc-card reveal reveal-scale d-3" data-svc="portfolio" data-label="Student Portfolio Website" data-onetime="0" data-monthly="300">
+        <article class="svc-card reveal reveal-scale d-3">
           <span class="badge">For students</span>
           <h4>Student Portfolio Website</h4>
           <p class="svc-price"><span class="amount">₹300</span><span class="per">per month</span></p>
           <p class="svc-desc">A personal portfolio for study-abroad applications — projects, achievements, and story in one link.</p>
-          <button type="button" class="btn btn-gold btn-block add-to-cart">Add to cart</button>
+          <button type="button" class="btn btn-gold btn-block add-to-cart" data-svc="portfolio" data-label="Student Portfolio Website" data-onetime="0" data-monthly="300">Add to cart</button>
         </article>
         <article class="svc-card reveal reveal-scale d-4">
           <h4>Enterprise / Custom</h4>
@@ -1990,6 +1990,9 @@ function renderCartItems() {
 
 function openCart() {
   renderCartItems();
+  document.getElementById("cartReqForm").style.display = "none";
+  document.getElementById("cartSuccess").style.display = "none";
+  document.getElementById("cartReqMsg").textContent = "";
   document.getElementById("cartOverlay").classList.add("open");
   document.getElementById("cartPanel").classList.add("open");
 }
@@ -2056,15 +2059,25 @@ document.getElementById("cartReqForm").addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
       body: JSON.stringify(payload),
     });
+    const contentType = res.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      // The endpoint returned something other than JSON (e.g. a 404 HTML page) —
+      // almost always means /api/submit-request isn't actually deployed.
+      msg.className = "calc-msg err";
+      msg.textContent = "Something's wrong on our end — please reach us directly for now.";
+      console.error("submit-request: unexpected response", res.status, contentType);
+      return;
+    }
     const data = await res.json();
     if (!res.ok) {
       msg.className = "calc-msg err";
       msg.textContent = data.error || "Request failed.";
       return;
     }
-  } catch {
+  } catch (err) {
     msg.className = "calc-msg err";
     msg.textContent = "Network error — please try again.";
+    console.error("submit-request: fetch threw", err);
     return;
   }
   saveCart([]);
