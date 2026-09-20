@@ -1,0 +1,51 @@
+const { createClient } = require("@supabase/supabase-js");
+
+const SUPABASE_URL = "https://ekqxrttxkntvcqyojfjq.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ";
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SITE_URL = "https://covara-website.vercel.app";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+module.exports = async (req, res) => {
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!SERVICE_ROLE_KEY) {
+    console.error("impersonate: SUPABASE_SERVICE_ROLE_KEY not set");
+    return res.status(500).json({ error: "Server misconfigured" });
+  }
+
+  const token = (req.headers.authorization || "").replace("Bearer ", "");
+  if (!token) return res.status(401).json({ error: "Missing session token" });
+
+  const targetEmail = String((req.body || {}).targetEmail || "").trim();
+  if (!targetEmail || !EMAIL_RE.test(targetEmail)) {
+    return res.status(400).json({ error: "A valid targetEmail is required" });
+  }
+
+  // Verify the caller is a signed-in admin, using THEIR token (RLS-scoped, no elevated access here)
+  const callerClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const { data: userData, error: userErr } = await callerClient.auth.getUser(token);
+  if (userErr || !userData?.user) return res.status(401).json({ error: "Invalid or expired session" });
+
+  const { data: profile } = await callerClient
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", userData.user.id)
+    .single();
+  if (!profile?.is_admin) return res.status(403).json({ error: "Admin access required" });
+
+  // Only now use the service role key, to generate a one-time login link
+  const adminClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+  const { data: linkData, error: linkErr } = await adminClient.auth.admin.generateLink({
+    type: "magiclink",
+    email: targetEmail,
+    options: { redirectTo: `${SITE_URL}/dashboard.html` },
+  });
+  if (linkErr) {
+    console.error("impersonate: generateLink failed:", linkErr.message);
+    return res.status(400).json({ error: "Could not generate a login link for that email." });
+  }
+
+  return res.status(200).json({ link: linkData.properties.action_link });
+};
