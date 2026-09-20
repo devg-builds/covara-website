@@ -19,6 +19,7 @@
   .topbar-right{display:flex;align-items:center;gap:18px;font-size:14px}
   .topbar-right a,.topbar-right button{color:var(--ivory-dim);text-decoration:none;background:none;border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:var(--sans);cursor:pointer;font-size:13.5px}
   .topbar-right button:hover,.topbar-right a:hover{color:var(--ivory);border-color:var(--gold)}
+  .pfp-avatar{width:34px;height:34px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--ink);font-family:var(--serif);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
   @media (max-width:600px){
     .topbar{flex-wrap:wrap;gap:10px}
     #emailTag{display:none}
@@ -69,7 +70,8 @@
         <div id="notifList"><div class="notif-empty">Loading…</div></div>
       </div>
     </div>
-    <span id="emailTag"></span>
+    <span id="emailTag" style="display:none"></span>
+    <span class="pfp-avatar" id="pfpAvatar" title=""></span>
     <button id="signOutBtn">Sign out</button>
   </div>
 </div>
@@ -94,6 +96,12 @@ function esc(str) {
   if (str === null || str === undefined) return "";
   return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
+function initials(name) {
+  const parts = (name || "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 function dueInfo(dueDate) {
   if (!dueDate) return { text: "No due date set", cls: "due-ok" };
@@ -112,6 +120,9 @@ function dueInfo(dueDate) {
 
   document.getElementById("emailTag").textContent = session.user.email;
   document.getElementById("welcome").textContent = `Welcome back, ${profile?.full_name || session.user.email}.`;
+  const pfp = document.getElementById("pfpAvatar");
+  pfp.textContent = initials(profile?.full_name || session.user.email);
+  pfp.title = `${profile?.full_name || ""} ${profile?.cuc_id ? "· " + profile.cuc_id : ""}`.trim();
 
   const { data: packages } = await sb
     .from("customer_packages")

@@ -901,75 +901,78 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
 .per { font-family: var(--mono); font-size: 13px; color: var(--ivory-faint); letter-spacing: 0.06em; }
 .price-desc { color: var(--ivory-faint); font-size: 14.5px; margin-bottom: 28px; }
 
-/* ============ QUOTE CALCULATOR ============ */
-.calc-box {
-  margin-top: 32px;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  padding: clamp(28px, 3.4vw, 44px);
-  background: var(--ink-2);
+/* ============ SERVICES MENU ============ */
+.svc-sub h3 { font-family: var(--serif); font-weight: 450; font-size: 22px; margin-bottom: 18px; }
+.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.svc-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 20px;
+  padding: 28px 24px; display: flex; flex-direction: column; position: relative; transition: transform 0.3s var(--ease), border-color 0.3s;
 }
-.calc-box > h3 { font-size: 24px; margin-bottom: 6px; }
-.calc-box > p { color: var(--ivory-faint); font-size: 14.5px; margin-bottom: 28px; }
-.calc-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; }
-.calc-col label { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ivory-faint); margin-bottom: 12px; }
-.calc-options { display: flex; gap: 12px; flex-wrap: wrap; }
-.calc-opt {
-  background: var(--ink); border: 1px solid var(--line-soft); border-radius: 12px;
-  padding: 12px 18px; color: var(--ivory-dim); font-family: var(--sans); font-size: 14px;
-  cursor: pointer; transition: all 0.25s;
+.svc-card:hover { transform: translateY(-4px); border-color: var(--line-soft); }
+.svc-card.featured { border-color: var(--gold); }
+.svc-card h4 { font-family: var(--serif); font-weight: 450; font-size: 19px; margin: 6px 0 8px; }
+.svc-price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+.svc-price .amount { font-family: var(--serif); font-size: 26px; color: var(--gold); }
+.svc-price .per { font-size: 12px; color: var(--ivory-faint); }
+.svc-desc { color: var(--ivory-dim); font-size: 13.5px; line-height: 1.6; margin-bottom: 20px; flex: 1; }
+.addon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.addon-card {
+  background: var(--ink-2); border: 1px solid var(--line-soft); border-radius: 14px;
+  padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  transition: border-color 0.25s, transform 0.25s var(--ease);
 }
-.calc-opt.active { border-color: var(--gold); color: var(--gold-bright); background: var(--ink-3); }
-.calc-addons { display: flex; flex-direction: column; gap: 10px; }
-.calc-addon {
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  background: var(--ink); border: 1px solid var(--line-soft); border-radius: 10px;
-  padding: 12px 16px; cursor: pointer; font-size: 14px; color: var(--ivory-dim); transition: border-color 0.25s;
+.addon-card:hover { border-color: var(--gold); transform: translateX(3px); }
+.addon-card-left { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ivory); }
+.addon-card-left .amt { display: block; color: var(--gold); font-size: 12.5px; margin-top: 2px; }
+.addon-card button { background: var(--ink-3); border: 1px solid var(--gold); color: var(--gold-bright); border-radius: 8px; padding: 8px 14px; font-family: var(--sans); font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.addon-card button:hover { background: var(--gold); color: var(--ink); }
+@media (max-width: 1020px) { .svc-grid { grid-template-columns: repeat(2, 1fr); } .addon-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .svc-grid { grid-template-columns: 1fr; } .addon-grid { grid-template-columns: 1fr; } }
+
+/* ============ NAV: cart + auth ============ */
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.cart-btn { position: relative; background: none; border: 1px solid var(--line-soft); border-radius: 10px; padding: 8px 12px; font-size: 15px; cursor: pointer; color: var(--ivory); }
+.cart-btn:hover { border-color: var(--gold); }
+.cart-badge { position: absolute; top: -6px; right: -6px; background: var(--gold); color: var(--ink); font-size: 10px; font-weight: 700; border-radius: 999px; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
+.auth-link { color: var(--ivory-dim); text-decoration: none; font-size: 14px; }
+.auth-link:hover { color: var(--gold); }
+.pfp-btn { position: relative; }
+.pfp-avatar {
+  width: 36px; height: 36px; border-radius: 999px; background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: var(--ink); font-family: var(--serif); font-weight: 700; font-size: 14px; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; border: none;
 }
-.calc-addon:hover { border-color: var(--line); }
-.calc-addon.checked { border-color: var(--gold); color: var(--ivory); }
-.calc-addon input { accent-color: var(--gold); width: auto; }
-.calc-addon .price-tag { color: var(--gold); font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
-.stepper { display: flex; align-items: center; gap: 16px; }
-.stepper button {
-  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line-soft);
-  background: var(--ink); color: var(--ivory); font-size: 16px; cursor: pointer;
+.pfp-dropdown {
+  position: absolute; right: 0; top: calc(100% + 10px); background: var(--ink-2); border: 1px solid var(--line);
+  border-radius: 12px; padding: 8px; min-width: 170px; display: none; z-index: 60;
 }
-.stepper button:hover { border-color: var(--gold); }
-.stepper span { font-family: var(--serif); font-size: 18px; min-width: 20px; text-align: center; }
-.calc-summary {
-  background: var(--ink-3); border: 1px solid var(--line); border-radius: 18px;
-  padding: 28px; align-self: start; position: sticky; top: 100px;
+.pfp-dropdown.open { display: block; }
+.pfp-dropdown a, .pfp-dropdown button { display: block; width: 100%; text-align: left; padding: 9px 12px; border-radius: 8px; color: var(--ivory-dim); text-decoration: none; background: none; border: none; font-family: var(--sans); font-size: 13.5px; cursor: pointer; }
+.pfp-dropdown a:hover, .pfp-dropdown button:hover { color: var(--ivory); background: var(--ink-3); }
+.pfp-dropdown .cuc { font-size: 11px; color: var(--ivory-faint); padding: 6px 12px 2px; }
+
+/* ============ CART PANEL ============ */
+.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 90; display: none; }
+.cart-overlay.open { display: block; }
+.cart-panel {
+  position: fixed; top: 0; right: 0; height: 100%; width: min(400px, 92vw); background: var(--ink-2);
+  border-left: 1px solid var(--line); z-index: 91; transform: translateX(100%); transition: transform .35s var(--ease);
+  display: flex; flex-direction: column; padding: 24px;
 }
-.calc-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ivory-faint); }
-.calc-total { font-family: var(--serif); font-size: clamp(30px, 3vw, 40px); color: var(--gold); margin: 8px 0 4px; }
-.calc-monthly { color: var(--ivory-dim); font-size: 14px; margin-bottom: 22px; min-height: 20px; }
-.calc-note { color: var(--ivory-faint); font-size: 12.5px; margin-top: 14px; text-align: center; }
-@media (max-width: 860px) {
-  .calc-grid { grid-template-columns: 1fr; }
-  .calc-summary { position: static; }
-}
-.calc-new-tag {
-  display: inline-block; background: var(--gold); color: var(--ink); font-family: var(--mono);
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 10px;
-  border-radius: 999px; margin-left: 10px; vertical-align: middle;
-}
-.calc-note-sub { font-size: 12px; color: var(--ivory-faint); margin-top: 4px; }
-.prestige-box {
-  margin-top: 24px; border: 1px solid var(--gold); border-radius: 14px; padding: 18px 20px;
-  background: linear-gradient(135deg, rgba(212,177,116,.08), transparent);
-  display: flex; gap: 14px; align-items: flex-start; cursor: pointer;
-}
-.prestige-box input { width: auto; margin-top: 3px; accent-color: var(--gold); }
-.prestige-box h4 { font-size: 15px; color: var(--gold-bright); margin-bottom: 4px; }
-.prestige-box p { font-size: 13px; color: var(--ivory-dim); line-height: 1.6; }
-.enterprise-banner {
-  margin-top: 32px; border: 1px solid var(--line); border-radius: 20px; padding: 32px clamp(24px,3vw,40px);
-  display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
-  background: var(--ink-2);
-}
-.enterprise-banner h3 { font-size: 20px; margin-bottom: 6px; }
-.enterprise-banner p { color: var(--ivory-faint); font-size: 14px; }
+.cart-panel.open { transform: translateX(0); }
+.cart-panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.cart-panel-head h3 { font-family: var(--serif); font-weight: 450; font-size: 19px; }
+.cart-panel-head button { background: none; border: 1px solid var(--line); border-radius: 8px; color: var(--ivory-dim); font-size: 14px; padding: 6px 10px; cursor: pointer; }
+.cart-items { flex: 1; overflow-y: auto; }
+.cart-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; gap: 10px; }
+.cart-item small { display: block; color: var(--ivory-faint); font-size: 12px; margin-top: 3px; }
+.cart-item button { background: none; border: none; color: var(--ivory-faint); cursor: pointer; font-size: 14px; }
+.cart-item button:hover { color: #e58b7a; }
+.cart-empty { color: var(--ivory-faint); font-size: 13.5px; text-align: center; padding: 40px 0; }
+.cart-panel-foot { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 12px; }
+.cart-total-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--ivory-dim); margin-bottom: 4px; }
+.cart-total-row span:last-child { color: var(--gold); font-weight: 600; }
+
 .req-form label { display: block; font-size: 12px; color: var(--ivory-faint); margin: 14px 0 5px; }
 .req-form input, .req-form textarea {
   width: 100%; background: var(--ink); border: 1px solid var(--line-soft); border-radius: 9px;
@@ -980,8 +983,9 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
 .req-success .tick { font-size: 32px; color: var(--gold); margin-bottom: 10px; }
 .calc-msg { font-size: 13px; margin-top: 10px; }
 .calc-msg.err { color: #e58b7a; }
+.calc-note-sub { font-size: 12px; color: var(--ivory-faint); margin-top: 4px; }
 .ref-row { display: flex; gap: 8px; margin-top: 4px; }
-.ref-row input { flex: 1; text-transform: uppercase; letter-spacing: 0.04em; }
+.ref-row input { flex: 1; text-transform: uppercase; letter-spacing: 0.04em; background: var(--ink); border: 1px solid var(--line-soft); border-radius: 9px; padding: 11px 13px; color: var(--ivory); font-family: var(--sans); font-size: 14px; }
 .btn-mini { background: var(--ink-3); border: 1px solid var(--gold); color: var(--gold-bright); border-radius: 9px; padding: 0 16px; font-family: var(--sans); font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.25s; white-space: nowrap; }
 .btn-mini:hover { background: var(--gold); color: var(--ink); }
 .ref-result { font-size: 13px; margin-top: 8px; min-height: 0; font-family: var(--serif); }
@@ -989,34 +993,8 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
 .ref-result.show-error { color: #e58b7a; animation: refShake 0.4s ease; }
 @keyframes refPop { 0% { opacity: 0; transform: translateY(6px); } 100% { opacity: 1; transform: translateY(0); } }
 @keyframes refShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
-
-/* ---- elegant calculator polish ---- */
-.calc-box { position: relative; overflow: hidden; }
-.calc-glow {
-  position: absolute; inset: -2px; z-index: 0; pointer-events: none; opacity: 0.5;
-  background: conic-gradient(from 0deg, transparent 0%, rgba(212,177,116,.35) 8%, transparent 18%, transparent 100%);
-  animation: calcSpin 7s linear infinite;
-}
-.calc-box > *:not(.calc-glow) { position: relative; z-index: 1; }
-@keyframes calcSpin { to { transform: rotate(360deg); } }
-.opt-icon { margin-right: 4px; }
-.addon-icon { margin: 0 6px 0 2px; }
-.calc-addon { transition: transform 0.25s var(--ease), border-color 0.25s, background 0.25s; }
-.calc-addon.checked { background: rgba(212,177,116,.06); transform: translateX(3px); }
-.calc-total { display: flex; align-items: baseline; gap: 2px; }
-.calc-total span:first-child { font-size: 0.6em; color: var(--gold-bright); }
-.shine { position: relative; overflow: hidden; }
-.shine::after {
-  content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
-  transform: skewX(-20deg); animation: shineSweep 3.2s ease-in-out infinite;
-}
-@keyframes shineSweep { 0% { left: -60%; } 40%, 100% { left: 130%; } }
-.prestige-box { transition: box-shadow 0.4s var(--ease), border-color 0.4s; }
-.prestige-box:has(#prestigeCheck:checked) { box-shadow: 0 0 24px rgba(212,177,116,.25); border-color: var(--gold-bright); }
-.stepper span { transition: transform 0.2s var(--ease); }
-@media (prefers-reduced-motion: reduce) {
-  .calc-glow, .shine::after { animation: none; }
+@media (max-width: 600px) {
+  .nav-right .nav-cta { display: none; }
 }
 .price-card ul { list-style: none; margin-bottom: 34px; flex: 1; }
 .price-card li {
@@ -1463,15 +1441,51 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
       <a href="#process">Process</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
-      <a href="login.html">Client Login</a>
     </nav>
-    <a href="#contact" class="btn btn-ghost nav-cta">Start a project</a>
+    <div class="nav-right">
+      <button class="cart-btn" id="cartBtn" aria-label="Cart">🛒<span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
+      <div id="authSlot"><a href="login.html" class="auth-link">Client Login</a></div>
+      <a href="#contact" class="btn btn-ghost nav-cta">Start a project</a>
+    </div>
     <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span>
     </button>
   </div>
   <div class="nav-progress" id="navProgress"></div>
 </header>
+
+<!-- ===== CART PANEL ===== -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-panel" id="cartPanel">
+  <div class="cart-panel-head">
+    <h3>Your request cart</h3>
+    <button id="cartClose" aria-label="Close">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-panel-foot" id="cartFoot" style="display:none">
+    <div class="cart-total-row"><span>One-time</span><span id="cartOneTime">₹0</span></div>
+    <div class="cart-total-row"><span>Monthly</span><span id="cartMonthly">₹0/mo</span></div>
+    <label style="margin-top:14px">Creator referral code <span class="calc-note-sub">(optional)</span></label>
+    <div class="ref-row">
+      <input type="text" id="cartReferral" placeholder="e.g. NAME15" autocomplete="off">
+      <button type="button" id="cartReferralApply" class="btn-mini">Apply</button>
+    </div>
+    <div class="ref-result" id="cartReferralResult"></div>
+    <button type="button" class="btn btn-gold btn-block" id="cartCheckoutBtn" style="margin-top:16px">Send request →</button>
+  </div>
+  <form class="req-form" id="cartReqForm" style="display:none">
+    <label>WhatsApp number</label>
+    <input type="tel" id="cartWhatsapp" required placeholder="+91 …">
+    <label>Tell us about your needs</label>
+    <textarea id="cartMessage" rows="3" placeholder="Anything specific about your project…"></textarea>
+    <button type="submit" class="btn btn-gold btn-block" style="margin-top:16px">Confirm &amp; send</button>
+    <div class="calc-msg" id="cartReqMsg"></div>
+  </form>
+  <div class="req-success" id="cartSuccess" style="display:none">
+    <div class="tick">✓</div>
+    <p style="color:var(--ivory)">Thanks! We'll get back to you shortly.</p>
+  </div>
+</aside>
 
 <!-- ===== MOBILE MENU ===== -->
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
@@ -1481,7 +1495,7 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
     <a href="#process"><span class="mm-num">03</span>Process</a>
     <a href="#pricing"><span class="mm-num">04</span>Pricing</a>
     <a href="#faq"><span class="mm-num">05</span>FAQ</a>
-    <a href="login.html"><span class="mm-num">06</span>Client Login</a>
+    <div id="mobileAuthSlot"><a href="login.html"><span class="mm-num">06</span>Client Login</a></div>
     <a href="#contact" class="mm-cta"><span class="mm-num">07</span>Start a project</a>
   </nav>
   <div class="mobile-menu-foot">
@@ -1691,111 +1705,39 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
         <h2 class="section-title">Simple plans, no surprises.</h2>
         <p class="section-note">Every rupee accounted for, before we begin.</p>
       </div>
-      <div class="calc-box reveal reveal-scale tilt-glow" id="quoteCalc">
-        <div class="calc-glow"></div>
-        <h3>Build your own quote <span class="calc-new-tag">✦ New</span></h3>
-        <p>Our Growth-tier custom build, priced exactly to what you need — no guesswork.</p>
-        <div class="calc-grid">
-          <div class="calc-col">
-            <label>Base — Growth plan</label>
-            <div class="calc-options">
-              <button type="button" class="calc-opt active" disabled><span class="opt-icon">✦</span> Growth — ₹12,000 + ₹2,000/mo</button>
-            </div>
-
-            <label style="margin-top:24px">Extra page sections <span class="calc-note-sub">₹450 each</span></label>
-            <div class="stepper">
-              <button type="button" id="pageMinus">−</button>
-              <span id="pageCount">0</span>
-              <button type="button" id="pagePlus">+</button>
-            </div>
-
-            <label style="margin-top:24px">Add-ons</label>
-            <div class="calc-addons" id="calcAddons"></div>
-
-            <div class="prestige-box" id="prestigeBox">
-              <input type="checkbox" id="prestigeCheck">
-              <div>
-                <h4>Prestige Membership <span class="calc-new-tag">✦ New</span> — ₹2,800/yr</h4>
-                <p>Same-day priority support, 15% off every service above, and your first 3 extra pages free.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="calc-summary">
-            <div id="calcSummaryBody">
-              <span class="calc-label">Estimated total</span>
-              <div class="calc-total"><span>₹</span><span id="calcOneTime">12,000</span></div>
-              <div class="calc-monthly" id="calcMonthly">+ ₹2,000/mo</div>
-              <button type="button" class="btn btn-gold btn-block shine" id="openReqForm">Request this quote →</button>
-              <p class="calc-note">Estimate only — we'll confirm final scope on a quick call.</p>
-            </div>
-            <form class="req-form" id="reqForm" style="display:none">
-              <label>Name</label>
-              <input type="text" id="reqName" required>
-              <label>WhatsApp number</label>
-              <input type="tel" id="reqWhatsapp" required placeholder="+91 …">
-              <label>Email</label>
-              <input type="email" id="reqEmail" required>
-              <label>Tell us about your needs</label>
-              <textarea id="reqMessage" rows="3" placeholder="Anything specific about your project…"></textarea>
-              <label>Creator referral code <span class="calc-note-sub">(optional)</span></label>
-              <div class="ref-row">
-                <input type="text" id="reqReferral" placeholder="e.g. NAME15" autocomplete="off">
-                <button type="button" id="reqReferralApply" class="btn-mini">Apply</button>
-              </div>
-              <div class="ref-result" id="reqReferralResult"></div>
-              <button type="submit" class="btn btn-gold btn-block" style="margin-top:16px">Send request</button>
-              <div class="calc-msg" id="reqMsg"></div>
-            </form>
-            <div class="req-success" id="reqSuccess" style="display:none">
-              <div class="tick">✓</div>
-              <p style="color:var(--ivory)">Thanks! We'll get back to you shortly.</p>
-            </div>
-          </div>
-        </div>
+      <div class="svc-sub reveal"><h3>Choose a package</h3></div>
+      <div class="svc-grid">
+        <article class="svc-card featured reveal reveal-scale" data-svc="growth" data-label="Growth Website Package" data-onetime="12000" data-monthly="2000">
+          <span class="badge">Most popular</span>
+          <h4>Growth Website Package</h4>
+          <p class="svc-price"><span class="amount">₹12,000</span><span class="per">+ ₹2,000/mo</span></p>
+          <p class="svc-desc">Full custom website, domain + hosting managed, monthly updates, SEO optimization, priority support.</p>
+          <button type="button" class="btn btn-gold btn-block add-to-cart">Add to cart</button>
+        </article>
+        <article class="svc-card reveal reveal-scale d-2" data-svc="erestro" data-label="E-Restro — Restaurants &amp; Cafés" data-onetime="4000" data-monthly="0">
+          <span class="badge">New launch</span>
+          <h4>E-Restro</h4>
+          <p class="svc-price"><span class="amount">₹4,000</span><span class="per">one-time · full launch</span></p>
+          <p class="svc-desc">Website, digital menu with QR scanner, social assets, and full launch support for restaurants &amp; cafés.</p>
+          <button type="button" class="btn btn-gold btn-block add-to-cart">Add to cart</button>
+        </article>
+        <article class="svc-card reveal reveal-scale d-3" data-svc="portfolio" data-label="Student Portfolio Website" data-onetime="0" data-monthly="300">
+          <span class="badge">For students</span>
+          <h4>Student Portfolio Website</h4>
+          <p class="svc-price"><span class="amount">₹300</span><span class="per">per month</span></p>
+          <p class="svc-desc">A personal portfolio for study-abroad applications — projects, achievements, and story in one link.</p>
+          <button type="button" class="btn btn-gold btn-block add-to-cart">Add to cart</button>
+        </article>
+        <article class="svc-card reveal reveal-scale d-4">
+          <h4>Enterprise / Custom</h4>
+          <p class="svc-price"><span class="amount">Custom</span><span class="per">tailored quote</span></p>
+          <p class="svc-desc">E-commerce, dashboards, multi-system integrations — for businesses with complex needs.</p>
+          <a href="#contact" class="btn btn-ghost btn-block">Talk to us <span class="arr">→</span></a>
+        </article>
       </div>
 
-      <div class="enterprise-banner reveal reveal-scale">
-        <div>
-          <h3>Need something bigger?</h3>
-          <p>E-commerce, dashboards, multi-system integrations — Enterprise is a tailored quote.</p>
-        </div>
-        <a href="#contact" class="btn btn-ghost">Talk to us <span class="arr">→</span></a>
-      </div>
-      <article class="erestro reveal reveal-scale d-4" id="erestro">
-        <span class="badge">New launch</span>
-        <div>
-          <span class="erestro-kicker">E-Restro — For Restaurants &amp; Cafés</span>
-          <h3>Great food deserves a <em class="gold-em">great</em> digital presence.</h3>
-          <p class="erestro-sub">One complete package: a professional website, a digital menu with QR scanner, social media assets, and full launch support — everything your restaurant needs to go online.</p>
-          <div class="tags"><span>Website</span><span>Digital Menu</span><span>QR Scanner</span><span>Social Assets</span><span>Launch Support</span></div>
-          <p class="erestro-ext">Extended: social media management from <b>₹200/month</b>.</p>
-        </div>
-        <div class="erestro-price">
-          <span class="amount">₹4,000</span>
-          <span class="per">one-time setup · full launch included</span>
-          <a href="#contact" class="btn btn-gold btn-block" data-service="erestro">Bring your restaurant online <span class="arr">→</span></a>
-          <p class="erestro-note">Your restaurant thrives when the world can find it.</p>
-        </div>
-      </article>
-
-      <article class="erestro student-portfolio reveal reveal-scale d-5" id="studentPortfolio">
-        <span class="badge">For students</span>
-        <div>
-          <span class="erestro-kicker">Student Portfolio Website — Studying Abroad?</span>
-          <h3>Show admissions officers who you <em class="gold-em">really</em> are.</h3>
-          <p class="erestro-sub">A personal portfolio website for students preparing applications — your projects, achievements, essays, and story, in one polished link you can drop into any application.</p>
-          <div class="tags"><span>Personal Bio</span><span>Projects &amp; Achievements</span><span>Resume/CV Embed</span><span>Custom Domain Ready</span></div>
-          <p class="erestro-ext">See an example build: <a href="https://devg-builds.github.io/personal-portfolio/" target="_blank" rel="noopener" class="gold-em">devg-builds.github.io/personal-portfolio</a></p>
-        </div>
-        <div class="erestro-price">
-          <span class="amount">₹300</span>
-          <span class="per">per month · managed &amp; hosted</span>
-          <a href="#contact" class="btn btn-gold btn-block" data-service="portfolio">Build my portfolio <span class="arr">→</span></a>
-          <p class="erestro-note">Cancel anytime. Your content stays yours.</p>
-        </div>
-      </article>
-
+      <div class="svc-sub reveal" style="margin-top:48px"><h3>Add extras to any package</h3></div>
+      <div class="addon-grid" id="addonGrid"></div>
       <article class="referral-box reveal reveal-scale d-6" id="referralBox">
         <div class="referral-copy">
           <span class="erestro-kicker">Creator referral</span>
@@ -1922,190 +1864,258 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const sbPublic = supabase.createClient(
+  "https://ekqxrttxkntvcqyojfjq.supabase.co",
+  "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
+);
 
-const CALC = {
-  baseOneTime: 12000,
-  baseMonthly: 2000,
-  extraPage: 450,
-  prestigeFee: 2800,
-  prestigeDiscount: 0.15,
-  prestigeFreePages: 3,
-  addons: [
-    { id: "ecommerce", label: "E-commerce / online store", price: 6000, cycle: "onetime", icon: "🛒" },
-    { id: "logo", label: "Logo & brand identity", price: 1200, cycle: "onetime", icon: "🎨" },
-    { id: "booking", label: "Booking / reservation system", price: 5000, cycle: "onetime", note: "price may vary by scope", icon: "📅" },
-    { id: "multilang", label: "Multi-language support", price: 400, cycle: "onetime", icon: "🌐" },
-    { id: "seo", label: "Advanced SEO & analytics", price: 1600, cycle: "onetime", icon: "📈" },
-    { id: "social", label: "Social media management", price: 450, cycle: "monthly", icon: "📣" },
-  ],
-};
-
-let pageCount = 0;
-const selectedAddons = new Set();
-
-const addonsBox = document.getElementById("calcAddons");
-if (addonsBox) {
-  addonsBox.innerHTML = CALC.addons
-    .map(
-      (a) => `
-    <label class="calc-addon" for="addon-${a.id}">
-      <span><input type="checkbox" id="addon-${a.id}" data-id="${a.id}"><span class="addon-icon">${a.icon}</span> ${a.label}${a.note ? ` <span class="calc-note-sub">(${a.note})</span>` : ""}</span>
-      <span class="price-tag">₹${a.price.toLocaleString("en-IN")}${a.cycle === "monthly" ? "/mo" : ""}</span>
-    </label>`
-    )
-    .join("");
-
-  addonsBox.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-    cb.addEventListener("change", () => {
-      cb.closest(".calc-addon").classList.toggle("checked", cb.checked);
-      cb.checked ? selectedAddons.add(cb.dataset.id) : selectedAddons.delete(cb.dataset.id);
-      recalc();
-    });
-  });
-
-  document.getElementById("pageMinus").addEventListener("click", () => {
-    pageCount = Math.max(0, pageCount - 1);
-    document.getElementById("pageCount").textContent = pageCount;
-    recalc();
-  });
-  document.getElementById("pagePlus").addEventListener("click", () => {
-    pageCount++;
-    document.getElementById("pageCount").textContent = pageCount;
-    recalc();
-  });
-  document.getElementById("prestigeCheck").addEventListener("change", recalc);
+function esc(str) {
+  if (str === null || str === undefined) return "";
+  return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function initials(name) {
+  const parts = (name || "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-function computeQuote() {
-  const prestige = document.getElementById("prestigeCheck").checked;
-  let oneTime = CALC.baseOneTime;
-  let monthly = CALC.baseMonthly;
-  const lines = [];
+const ADDON_CATALOG = [
+  { id: "ecommerce", label: "E-commerce / online store", price: 6000, cycle: "onetime", icon: "🛒" },
+  { id: "logo", label: "Logo & brand identity", price: 1200, cycle: "onetime", icon: "🎨" },
+  { id: "booking", label: "Booking / reservation system", price: 5000, cycle: "onetime", icon: "📅" },
+  { id: "multilang", label: "Multi-language support", price: 400, cycle: "onetime", icon: "🌐" },
+  { id: "seo", label: "Advanced SEO & analytics", price: 1600, cycle: "onetime", icon: "📈" },
+  { id: "social", label: "Social media management", price: 450, cycle: "monthly", icon: "📣" },
+  { id: "prestige", label: "Prestige Membership (15% off + priority support)", price: 2800, cycle: "yearly", icon: "✦" },
+];
 
-  const chargeablePages = Math.max(0, pageCount - (prestige ? CALC.prestigeFreePages : 0));
-  if (pageCount > 0) {
-    oneTime += chargeablePages * CALC.extraPage;
-    lines.push(`${pageCount} extra page(s)${prestige && pageCount > chargeablePages ? ` (${Math.min(pageCount, CALC.prestigeFreePages)} free — Prestige)` : ""}`);
+const addonGrid = document.getElementById("addonGrid");
+if (addonGrid) {
+  addonGrid.innerHTML = ADDON_CATALOG.map(
+    (a) => `
+    <div class="addon-card">
+      <span class="addon-card-left">${a.icon} ${a.label}<span class="amt">₹${a.price.toLocaleString("en-IN")}${a.cycle === "monthly" ? "/mo" : a.cycle === "yearly" ? "/yr" : ""}</span></span>
+      <button type="button" class="add-to-cart" data-svc="${a.id}" data-label="${a.label.replace(/"/g, "&quot;")}" data-onetime="${a.cycle === "onetime" ? a.price : 0}" data-monthly="${a.cycle === "monthly" ? a.price : 0}" data-yearly="${a.cycle === "yearly" ? a.price : 0}">Add</button>
+    </div>`
+  ).join("");
+}
+
+// ---------- Cart (localStorage) ----------
+function getCart() {
+  try { return JSON.parse(localStorage.getItem("covara_cart") || "[]"); } catch { return []; }
+}
+function saveCart(items) {
+  localStorage.setItem("covara_cart", JSON.stringify(items));
+  renderCartBadge();
+}
+function renderCartBadge() {
+  const items = getCart();
+  const badge = document.getElementById("cartBadge");
+  if (items.length > 0) {
+    badge.style.display = "flex";
+    badge.textContent = items.length;
+  } else {
+    badge.style.display = "none";
   }
+}
+renderCartBadge();
 
-  CALC.addons.forEach((a) => {
-    if (!selectedAddons.has(a.id)) return;
-    if (a.cycle === "monthly") monthly += a.price;
-    else oneTime += a.price;
-    lines.push(a.label);
-  });
-
-  if (prestige) {
-    oneTime = Math.round(oneTime * (1 - CALC.prestigeDiscount));
-    monthly = Math.round(monthly * (1 - CALC.prestigeDiscount));
-    lines.push("Prestige Membership (₹2,800/yr — 15% discount applied)");
+function addToCart(svc) {
+  const items = getCart();
+  if (items.some((i) => i.svc === svc.svc)) {
+    openCart();
+    return;
   }
-
-  return { oneTime, monthly, prestige, lines };
+  items.push(svc);
+  saveCart(items);
+  openCart();
 }
 
-let displayedOneTime = CALC.baseOneTime;
-function animateTo(el, from, to) {
-  const duration = 500;
-  const start = performance.now();
-  function tick(now) {
-    const p = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(from + (to - from) * eased).toLocaleString("en-IN");
-    if (p < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-function recalc() {
-  const q = computeQuote();
-  const el = document.getElementById("calcOneTime");
-  animateTo(el, displayedOneTime, q.oneTime);
-  displayedOneTime = q.oneTime;
-  document.getElementById("calcMonthly").textContent =
-    `+ ₹${q.monthly.toLocaleString("en-IN")}/mo` + (q.prestige ? ` · + ₹2,800/yr Prestige` : "");
-}
-
-if (addonsBox) recalc();
-
-// ---------- Request this quote → CSR ----------
-const VALID_CREATOR_CODE = "HARSHIL15";
-let validReferralCode = null;
-
-const reqReferralApply = document.getElementById("reqReferralApply");
-if (reqReferralApply) {
-  reqReferralApply.addEventListener("click", () => {
-    const input = document.getElementById("reqReferral");
-    const result = document.getElementById("reqReferralResult");
-    const code = input.value.trim().toUpperCase();
-    result.classList.remove("show-success", "show-error");
-    void result.offsetWidth;
-    if (code && code === VALID_CREATOR_CODE) {
-      validReferralCode = code;
-      result.textContent = `🎉 Code applied — 15% discount unlocked!`;
-      result.classList.add("show-success");
-    } else {
-      validReferralCode = null;
-      result.textContent = "That code isn't valid — check with your creator and try again.";
-      result.classList.add("show-error");
-    }
-  });
-}
-
-const openReqBtn = document.getElementById("openReqForm");
-if (openReqBtn) {
-  openReqBtn.addEventListener("click", () => {
-    document.getElementById("calcSummaryBody").style.display = "none";
-    document.getElementById("reqForm").style.display = "block";
-  });
-
-  document.getElementById("reqForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const msg = document.getElementById("reqMsg");
-    msg.className = "calc-msg";
-    msg.textContent = "";
-    const q = computeQuote();
-    let oneTime = q.oneTime;
-    let monthly = q.monthly;
-    if (validReferralCode) {
-      oneTime = Math.round(oneTime * 0.85);
-      monthly = Math.round(monthly * 0.85);
-    }
-    const payload = {
-      name: document.getElementById("reqName").value.trim(),
-      whatsapp: document.getElementById("reqWhatsapp").value.trim(),
-      email: document.getElementById("reqEmail").value.trim(),
-      message: document.getElementById("reqMessage").value.trim(),
-      plan_summary: "Growth — " + (q.lines.join(", ") || "no add-ons"),
-      estimate_onetime: `₹${oneTime.toLocaleString("en-IN")}`,
-      estimate_monthly: `₹${monthly.toLocaleString("en-IN")}/mo`,
-      prestige: q.prestige,
-      referral_code: validReferralCode || undefined,
+document.querySelectorAll(".add-to-cart").forEach((btn) => {
+  btn.addEventListener("click", async () => {
+    const svc = {
+      svc: btn.dataset.svc,
+      label: btn.dataset.label,
+      onetime: parseInt(btn.dataset.onetime, 10) || 0,
+      monthly: parseInt(btn.dataset.monthly, 10) || 0,
+      yearly: parseInt(btn.dataset.yearly, 10) || 0,
     };
-    const { error } = await (async () => {
-      try {
-        const res = await fetch("/api/submit-request", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json();
-        if (!res.ok) return { error: data.error || "Request failed." };
-        return { error: null };
-      } catch {
-        return { error: "Network error — please try again." };
-      }
-    })();
-    if (error) {
-      msg.className = "calc-msg err";
-      msg.textContent = error;
+    const { data: { session } } = await sbPublic.auth.getSession();
+    if (!session) {
+      sessionStorage.setItem("covara_pending_add", JSON.stringify(svc));
+      window.location.href = "login.html?next=" + encodeURIComponent("index.html#pricing");
       return;
     }
-    document.getElementById("reqForm").style.display = "none";
-    document.getElementById("reqSuccess").style.display = "block";
+    addToCart(svc);
   });
+});
+
+// ---------- Cart panel ----------
+function renderCartItems() {
+  const items = getCart();
+  const list = document.getElementById("cartItems");
+  const foot = document.getElementById("cartFoot");
+  if (items.length === 0) {
+    list.innerHTML = `<div class="cart-empty">Your cart is empty. Add a service from the pricing section.</div>`;
+    foot.style.display = "none";
+    return;
+  }
+  list.innerHTML = items
+    .map(
+      (i, idx) => `
+    <div class="cart-item">
+      <span>${esc(i.label)}<small>${i.onetime ? `₹${i.onetime.toLocaleString("en-IN")} one-time` : ""}${i.monthly ? ` · ₹${i.monthly.toLocaleString("en-IN")}/mo` : ""}${i.yearly ? ` · ₹${i.yearly.toLocaleString("en-IN")}/yr` : ""}</small></span>
+      <button type="button" data-idx="${idx}" class="cart-remove">✕</button>
+    </div>`
+    )
+    .join("");
+  list.querySelectorAll(".cart-remove").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const items2 = getCart();
+      items2.splice(parseInt(btn.dataset.idx, 10), 1);
+      saveCart(items2);
+      renderCartItems();
+    });
+  });
+  foot.style.display = "block";
+  const oneTime = items.reduce((s, i) => s + i.onetime, 0);
+  const monthly = items.reduce((s, i) => s + i.monthly, 0);
+  const yearly = items.reduce((s, i) => s + i.yearly, 0);
+  document.getElementById("cartOneTime").textContent = `₹${oneTime.toLocaleString("en-IN")}`;
+  document.getElementById("cartMonthly").textContent = `₹${monthly.toLocaleString("en-IN")}/mo` + (yearly ? ` + ₹${yearly.toLocaleString("en-IN")}/yr` : "");
 }
+
+function openCart() {
+  renderCartItems();
+  document.getElementById("cartOverlay").classList.add("open");
+  document.getElementById("cartPanel").classList.add("open");
+}
+function closeCart() {
+  document.getElementById("cartOverlay").classList.remove("open");
+  document.getElementById("cartPanel").classList.remove("open");
+}
+document.getElementById("cartBtn").addEventListener("click", openCart);
+document.getElementById("cartClose").addEventListener("click", closeCart);
+document.getElementById("cartOverlay").addEventListener("click", closeCart);
+
+// ---------- Referral code (cart checkout) ----------
+const VALID_CREATOR_CODE = "HARSHIL15";
+let validReferralCode = null;
+document.getElementById("cartReferralApply").addEventListener("click", () => {
+  const input = document.getElementById("cartReferral");
+  const result = document.getElementById("cartReferralResult");
+  const code = input.value.trim().toUpperCase();
+  result.classList.remove("show-success", "show-error");
+  void result.offsetWidth;
+  if (code && code === VALID_CREATOR_CODE) {
+    validReferralCode = code;
+    result.textContent = "🎉 Code applied — 15% discount unlocked!";
+    result.classList.add("show-success");
+  } else {
+    validReferralCode = null;
+    result.textContent = "That code isn't valid — check with your creator and try again.";
+    result.classList.add("show-error");
+  }
+});
+
+// ---------- Checkout: cart → CSR ----------
+document.getElementById("cartCheckoutBtn").addEventListener("click", async () => {
+  const { data: { session } } = await sbPublic.auth.getSession();
+  if (!session) {
+    window.location.href = "login.html?next=" + encodeURIComponent("index.html#pricing");
+    return;
+  }
+  document.getElementById("cartFoot").style.display = "none";
+  document.getElementById("cartReqForm").style.display = "block";
+});
+
+document.getElementById("cartReqForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("cartReqMsg");
+  msg.className = "calc-msg";
+  msg.textContent = "";
+  const { data: { session } } = await sbPublic.auth.getSession();
+  if (!session) {
+    window.location.href = "login.html?next=" + encodeURIComponent("index.html#pricing");
+    return;
+  }
+  const items = getCart();
+  const payload = {
+    whatsapp: document.getElementById("cartWhatsapp").value.trim(),
+    message: document.getElementById("cartMessage").value.trim(),
+    plan_summary: items.map((i) => i.label).join(", ") || "no items",
+    items,
+    referral_code: validReferralCode || undefined,
+  };
+  try {
+    const res = await fetch("/api/submit-request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      msg.className = "calc-msg err";
+      msg.textContent = data.error || "Request failed.";
+      return;
+    }
+  } catch {
+    msg.className = "calc-msg err";
+    msg.textContent = "Network error — please try again.";
+    return;
+  }
+  saveCart([]);
+  document.getElementById("cartReqForm").style.display = "none";
+  document.getElementById("cartSuccess").style.display = "block";
+});
+
+// ---------- Auth state: PFP avatar / login link, pending-add resume ----------
+async function initAuthUI() {
+  const { data: { session } } = await sbPublic.auth.getSession();
+  const authSlot = document.getElementById("authSlot");
+  const mobileAuthSlot = document.getElementById("mobileAuthSlot");
+  if (!session) {
+    authSlot.innerHTML = `<a href="login.html" class="auth-link">Client Login</a>`;
+    mobileAuthSlot.innerHTML = `<a href="login.html"><span class="mm-num">06</span>Client Login</a>`;
+    return;
+  }
+  const { data: profile } = await sbPublic.from("profiles").select("full_name, cuc_id, is_admin").eq("id", session.user.id).single();
+  const initialsText = initials(profile?.full_name || session.user.email);
+  authSlot.innerHTML = `
+    <div class="pfp-btn">
+      <button class="pfp-avatar" id="pfpAvatarBtn">${esc(initialsText)}</button>
+      <div class="pfp-dropdown" id="pfpDropdown">
+        <div class="cuc">${esc(profile?.cuc_id || "")}</div>
+        <a href="${profile?.is_admin ? "admin.html" : "dashboard.html"}">Dashboard</a>
+        <button type="button" id="pfpSignOut">Sign out</button>
+      </div>
+    </div>`;
+  mobileAuthSlot.innerHTML = `<a href="${profile?.is_admin ? "admin.html" : "dashboard.html"}"><span class="mm-num">06</span>Dashboard</a>`;
+
+  document.getElementById("pfpAvatarBtn").addEventListener("click", () => {
+    document.getElementById("pfpDropdown").classList.toggle("open");
+  });
+  document.getElementById("pfpSignOut").addEventListener("click", async () => {
+    await sbPublic.auth.signOut();
+    window.location.reload();
+  });
+  document.addEventListener("click", (e) => {
+    const btn = document.getElementById("pfpAvatarBtn");
+    const dd = document.getElementById("pfpDropdown");
+    if (dd && btn && !btn.contains(e.target) && !dd.contains(e.target)) dd.classList.remove("open");
+  });
+
+  // resume a pending "add to cart" after returning from login
+  const pending = sessionStorage.getItem("covara_pending_add");
+  if (pending) {
+    sessionStorage.removeItem("covara_pending_add");
+    try { addToCart(JSON.parse(pending)); } catch {}
+  }
+}
+initAuthUI();
 </script>
 <script>
 
@@ -2350,17 +2360,6 @@ const faqItems = document.querySelectorAll(".faq-list details");
 faqItems.forEach((d) => {
   d.addEventListener("toggle", () => {
     if (d.open) faqItems.forEach((other) => other !== d && (other.open = false));
-  });
-});
-
-// ---------- Card CTAs → preselect service in contact form ----------
-const servicePrefixes = { erestro: "E-Restro", portfolio: "Student Portfolio" };
-document.querySelectorAll("[data-service]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const prefix = servicePrefixes[btn.dataset.service];
-    const sel = document.querySelector('#contactForm select[name="service"]');
-    const opt = [...sel.options].find((o) => o.text.startsWith(prefix));
-    if (opt) sel.value = opt.text;
   });
 });
 

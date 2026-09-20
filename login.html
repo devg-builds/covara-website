@@ -62,6 +62,15 @@ const sb = supabase.createClient(
   "sb_publishable_AYrayKhIpdftrYfyxt9dhA_P3WNxlRZ"
 );
 
+// Only ever redirect to a relative path on our own site — never an
+// absolute/external URL, to prevent open-redirect abuse via ?next=
+function safeNextUrl() {
+  const next = new URLSearchParams(window.location.search).get("next");
+  if (!next) return null;
+  if (/^https?:\/\//i.test(next) || next.startsWith("//") || next.startsWith("\\")) return null;
+  return next;
+}
+
 document.getElementById("pwToggle").addEventListener("click", () => {
   const f = document.getElementById("pwField");
   const t = document.getElementById("pwToggle");
@@ -92,6 +101,11 @@ form.addEventListener("submit", async (e) => {
     btn.textContent = "Sign in";
     return;
   }
+  const next = safeNextUrl();
+  if (next) {
+    window.location.href = next;
+    return;
+  }
   const { data: profile } = await sb
     .from("profiles")
     .select("is_admin")
@@ -104,6 +118,11 @@ form.addEventListener("submit", async (e) => {
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
+    const next = safeNextUrl();
+    if (next) {
+      window.location.href = next;
+      return;
+    }
     const { data: profile } = await sb.from("profiles").select("is_admin").eq("id", session.user.id).single();
     window.location.href = profile?.is_admin ? "admin.html" : "dashboard.html";
   }

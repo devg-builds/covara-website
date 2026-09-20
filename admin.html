@@ -51,6 +51,11 @@
   .selected-chip button{background:none;border:none;color:var(--ivory-faint);cursor:pointer;font-size:14px}
   .cust-info{margin-top:18px}
   .info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .cust-table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .cust-table th,.cust-table td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+  .cust-table th{color:var(--ivory-faint);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em}
+  .cust-table td:first-child{color:var(--gold-bright);font-family:var(--serif)}
+  .table-wrap{overflow-x:auto}
   .info-row span:first-child{color:var(--ivory-dim)}
   .alert-box{margin-top:16px;background:rgba(229,139,122,.1);border:1px solid #e58b7a;border-radius:12px;padding:14px 16px;color:#e58b7a;font-size:13.5px;font-weight:600}
   .svc-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
@@ -131,6 +136,13 @@
           <div class="search-results" id="infoResults"></div>
         </div>
         <div class="cust-info" id="infoDisplay"></div>
+      </div>
+      <div class="panel">
+        <h2>All customers</h2>
+        <div class="table-wrap"><table class="cust-table">
+          <thead><tr><th>CUC ID</th><th>Name</th><th>Email</th><th>Joined</th></tr></thead>
+          <tbody id="customerTableBody"></tbody>
+        </table></div>
       </div>
     </div>
 
@@ -324,6 +336,7 @@ wireSearch("infoSearch", "infoResults", async (customer) => {
   const active = (pkgs || []).filter((p) => p.status !== "expired");
 
   document.getElementById("infoDisplay").innerHTML = `
+    <div class="info-row"><span>CUC ID</span><span>${esc(full.cuc_id) || "—"}</span></div>
     <div class="info-row"><span>Name</span><span>${esc(full.full_name) || "—"}</span></div>
     <div class="info-row"><span>Email</span><span>${esc(full.email)}</span></div>
     <div class="info-row"><span>Account created</span><span>${full.created_at ? new Date(full.created_at).toLocaleDateString() : "—"}</span></div>
@@ -331,6 +344,20 @@ wireSearch("infoSearch", "infoResults", async (customer) => {
     ${unpaid.length > 0 ? `<div class="alert-box">⚠ Payment pending for: ${esc(unpaid.map((p) => p.service_name).join(", "))}</div>` : ""}
   `;
 });
+
+async function loadCustomerTable() {
+  const { data } = await sb.from("profiles").select("cuc_id, full_name, email, created_at").eq("is_admin", false).order("cuc_id");
+  const body = document.getElementById("customerTableBody");
+  if (!data || data.length === 0) {
+    body.innerHTML = `<tr><td colspan="4" style="color:var(--ivory-faint)">No customers yet.</td></tr>`;
+    return;
+  }
+  body.innerHTML = data
+    .map(
+      (c) => `<tr><td>${esc(c.cuc_id) || "—"}</td><td>${esc(c.full_name) || "—"}</td><td>${esc(c.email)}</td><td>${new Date(c.created_at).toLocaleDateString()}</td></tr>`
+    )
+    .join("");
+}
 
 // ---------- SERVICES ASSIGNMENT ----------
 wireSearch("assignSearch", "assignResults", async (customer) => {
@@ -535,6 +562,7 @@ async function loadCsr() {
   document.getElementById("app").style.display = "flex";
   loadNotifLog();
   loadCsr();
+  loadCustomerTable();
 })();
 
 document.getElementById("signOutBtn").addEventListener("click", async () => {
