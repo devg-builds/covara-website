@@ -901,6 +901,31 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
 .per { font-family: var(--mono); font-size: 13px; color: var(--ivory-faint); letter-spacing: 0.06em; }
 .price-desc { color: var(--ivory-faint); font-size: 14.5px; margin-bottom: 28px; }
 
+/* ============ DOMAIN CHECK ============ */
+.domain-box {
+  max-width: 640px; margin: 0 auto; background: var(--ink-2); border: 1px solid var(--line);
+  border-radius: 20px; padding: clamp(24px, 3vw, 36px);
+}
+.domain-input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.domain-input-row input {
+  flex: 1; min-width: 200px; background: var(--ink); border: 1px solid var(--line-soft); border-radius: 12px;
+  padding: 15px 18px; color: var(--ivory); font-family: var(--sans); font-size: 15px;
+}
+.domain-input-row input:focus { outline: none; border-color: var(--gold); }
+.domain-result { margin-top: 18px; min-height: 0; }
+.domain-result.checking { color: var(--ivory-dim); font-size: 14px; font-family: var(--serif); font-style: italic; }
+.domain-result.avail {
+  border: 1px solid var(--gold); border-radius: 14px; padding: 18px 20px; background: rgba(212,177,116,.06);
+}
+.domain-result.avail .dr-title { font-family: var(--serif); font-size: 18px; color: var(--gold-bright); margin-bottom: 10px; }
+.domain-result.taken { color: #e58b7a; font-size: 14px; font-family: var(--serif); padding: 4px 2px; }
+.domain-result.unknown { color: var(--ivory-faint); font-size: 13.5px; padding: 4px 2px; }
+.domain-result.err { color: #e58b7a; font-size: 13.5px; padding: 4px 2px; }
+@media (max-width: 600px) {
+  .domain-input-row { flex-direction: column; }
+  .domain-input-row button { width: 100%; }
+}
+
 /* ============ SERVICES MENU ============ */
 .svc-sub h3 { font-family: var(--serif); font-weight: 450; font-size: 22px; margin-bottom: 18px; }
 .svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -1493,10 +1518,11 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
     <a href="#about"><span class="mm-num">01</span>About</a>
     <a href="#services"><span class="mm-num">02</span>Services</a>
     <a href="#process"><span class="mm-num">03</span>Process</a>
-    <a href="#pricing"><span class="mm-num">04</span>Pricing</a>
-    <a href="#faq"><span class="mm-num">05</span>FAQ</a>
-    <div id="mobileAuthSlot"><a href="login.html"><span class="mm-num">06</span>Client Login</a></div>
-    <a href="#contact" class="mm-cta"><span class="mm-num">07</span>Start a project</a>
+    <a href="#domain-check"><span class="mm-num">04</span>Domain Check</a>
+    <a href="#pricing"><span class="mm-num">05</span>Pricing</a>
+    <a href="#faq"><span class="mm-num">06</span>FAQ</a>
+    <div id="mobileAuthSlot"><a href="login.html"><span class="mm-num">07</span>Client Login</a></div>
+    <a href="#contact" class="mm-cta"><span class="mm-num">08</span>Start a project</a>
   </nav>
   <div class="mobile-menu-foot">
     <a href="mailto:covaraglobal@gmail.com">covaraglobal@gmail.com</a>
@@ -1697,11 +1723,29 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
     </div>
   </section>
 
+  <!-- ===== DOMAIN CHECK ===== -->
+  <section class="section domain-check" id="domain-check">
+    <div class="container">
+      <div class="section-head center reveal">
+        <span class="kicker">04 — Claim your name</span>
+        <h2 class="section-title">Is your domain still up for grabs?</h2>
+        <p class="section-note">Check instantly — if it's free, we'll get your site built on it.</p>
+      </div>
+      <div class="domain-box reveal reveal-scale">
+        <div class="domain-input-row">
+          <input type="text" id="domainInput" placeholder="yourbusiness.in" autocomplete="off" spellcheck="false">
+          <button type="button" class="btn btn-gold" id="domainCheckBtn">Check availability</button>
+        </div>
+        <div class="domain-result" id="domainResult"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== PRICING ===== -->
   <section class="section pricing" id="pricing">
     <div class="container">
       <div class="section-head center reveal">
-        <span class="kicker">04 — Transparent pricing</span>
+        <span class="kicker">05 — Transparent pricing</span>
         <h2 class="section-title">Simple plans, no surprises.</h2>
         <p class="section-note">Every rupee accounted for, before we begin.</p>
       </div>
@@ -1769,7 +1813,7 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
   <section class="section faq" id="faq">
     <div class="container faq-inner">
       <div class="section-head reveal">
-        <span class="kicker">05 — Common questions</span>
+        <span class="kicker">06 — Common questions</span>
         <h2 class="section-title">Answers, upfront.</h2>
       </div>
       <div class="faq-list reveal d-2">
@@ -1801,7 +1845,7 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
   <section class="section contact" id="contact">
     <div class="container contact-grid">
       <div class="contact-copy reveal reveal-left">
-        <span class="kicker">06 — Get in touch</span>
+        <span class="kicker">07 — Get in touch</span>
         <h2 class="section-title">Let's build something <em class="gold-em">great</em> together.</h2>
         <p>Whether you're a local shop going online for the first time or a startup that needs a polished presence — we're here, and we reply fast.</p>
         <ul class="contact-meta">
@@ -1875,6 +1919,55 @@ function esc(str) {
   if (str === null || str === undefined) return "";
   return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
+
+// ---------- Domain availability check ----------
+const domainInput = document.getElementById("domainInput");
+const domainCheckBtn = document.getElementById("domainCheckBtn");
+const domainResult = document.getElementById("domainResult");
+
+async function checkDomain() {
+  const raw = domainInput.value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+  if (!raw || !raw.includes(".")) {
+    domainResult.className = "domain-result err";
+    domainResult.textContent = "Enter a full domain, e.g. yourbusiness.in";
+    return;
+  }
+  domainResult.className = "domain-result checking";
+  domainResult.textContent = "Checking…";
+  domainCheckBtn.disabled = true;
+  try {
+    const res = await fetch(`/api/check-domain?domain=${encodeURIComponent(raw)}`);
+    const data = await res.json();
+    if (!res.ok) {
+      domainResult.className = "domain-result err";
+      domainResult.textContent = data.error || "Something went wrong — please try again.";
+      return;
+    }
+    if (data.available === true) {
+      domainResult.className = "domain-result avail";
+      domainResult.innerHTML = `
+        <div class="dr-title">✓ ${esc(raw)} looks available!</div>
+        <button type="button" class="btn btn-gold" id="domainGoToPricing">Get this domain →</button>`;
+      document.getElementById("domainGoToPricing").addEventListener("click", () => {
+        document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
+      });
+    } else if (data.available === false) {
+      domainResult.className = "domain-result taken";
+      domainResult.textContent = `${raw} is already taken — try another, or ask us about alternatives.`;
+    } else {
+      domainResult.className = "domain-result unknown";
+      domainResult.textContent = data.note || "Couldn't confirm this one — try a different domain or check with a registrar.";
+    }
+  } catch {
+    domainResult.className = "domain-result err";
+    domainResult.textContent = "Network error — please try again.";
+  } finally {
+    domainCheckBtn.disabled = false;
+  }
+}
+domainCheckBtn.addEventListener("click", checkDomain);
+domainInput.addEventListener("keydown", (e) => { if (e.key === "Enter") checkDomain(); });
+
 function initials(name) {
   const parts = (name || "").trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return "?";
@@ -2092,7 +2185,7 @@ async function initAuthUI() {
   const mobileAuthSlot = document.getElementById("mobileAuthSlot");
   if (!session) {
     authSlot.innerHTML = `<a href="login.html" class="auth-link">Client Login</a>`;
-    mobileAuthSlot.innerHTML = `<a href="login.html"><span class="mm-num">06</span>Client Login</a>`;
+    mobileAuthSlot.innerHTML = `<a href="login.html"><span class="mm-num">07</span>Client Login</a>`;
     return;
   }
   const { data: profile } = await sbPublic.from("profiles").select("full_name, cuc_id, is_admin").eq("id", session.user.id).single();
@@ -2106,7 +2199,7 @@ async function initAuthUI() {
         <button type="button" id="pfpSignOut">Sign out</button>
       </div>
     </div>`;
-  mobileAuthSlot.innerHTML = `<a href="${profile?.is_admin ? "admin.html" : "dashboard.html"}"><span class="mm-num">06</span>Dashboard</a>`;
+  mobileAuthSlot.innerHTML = `<a href="${profile?.is_admin ? "admin.html" : "dashboard.html"}"><span class="mm-num">07</span>Dashboard</a>`;
 
   document.getElementById("pfpAvatarBtn").addEventListener("click", () => {
     document.getElementById("pfpDropdown").classList.toggle("open");
