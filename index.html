@@ -1138,6 +1138,55 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; letter-spacing: -0.015
   .referral-input-row { flex-direction: column; }
 }
 
+/* ============ COVARA AGENT ============ */
+.agent-fab {
+  position: fixed; bottom: 24px; right: 24px; width: 58px; height: 58px; border-radius: 999px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright)); border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,.4); transition: transform .25s var(--ease);
+}
+.agent-fab:hover { transform: scale(1.08); }
+.agent-fab.hide { display: none; }
+.agent-phone {
+  position: fixed; bottom: 24px; right: 24px; width: 320px; max-width: calc(100vw - 32px); height: 560px;
+  max-height: calc(100vh - 100px); background: #0b0a08; border: 6px solid #0b0a08; border-radius: 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5); z-index: 201; display: none; flex-direction: column; overflow: hidden;
+}
+.agent-phone.open { display: flex; }
+.agent-statusbar {
+  background: #f7f3ec; padding: 10px 22px 4px; display: flex; align-items: center; justify-content: space-between;
+  position: relative;
+}
+.agent-time { font-family: var(--sans); font-weight: 700; font-size: 12px; color: #1a1712; }
+.agent-island {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 84px; height: 22px;
+  background: #0b0a08; border-radius: 999px;
+}
+.agent-battery { display: flex; align-items: center; gap: 4px; font-family: var(--sans); font-size: 10.5px; font-weight: 700; color: #1a1712; }
+.agent-head { display: flex; align-items: center; gap: 10px; padding: 10px 16px 14px; background: #f7f3ec; border-bottom: 1px solid rgba(26,23,18,.1); }
+.agent-dot { width: 8px; height: 8px; border-radius: 999px; background: #3bb54a; box-shadow: 0 0 6px #3bb54a; }
+.agent-title { font-family: var(--serif); font-size: 15px; color: #1a1712; }
+.agent-sub { font-size: 11px; color: rgba(26,23,18,.55); }
+.agent-close { margin-left: auto; background: none; border: none; color: rgba(26,23,18,.55); font-size: 14px; cursor: pointer; }
+.agent-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: #f7f3ec; }
+.agent-msg { max-width: 88%; font-size: 13.5px; line-height: 1.5; padding: 10px 13px; border-radius: 14px; }
+.agent-msg.bot { align-self: flex-start; background: #eae2d2; color: #2a2620; border-bottom-left-radius: 4px; }
+.agent-msg.user { align-self: flex-end; background: var(--gold); color: #1a1712; border-bottom-right-radius: 4px; font-weight: 600; }
+.agent-questions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.agent-q-btn {
+  text-align: left; background: #fff; border: 1px solid rgba(26,23,18,.14); color: #2a2620; border-radius: 10px;
+  padding: 10px 12px; font-family: var(--sans); font-size: 12.5px; cursor: pointer; transition: border-color .2s;
+}
+.agent-q-btn:hover { border-color: var(--gold); }
+.agent-call {
+  display: block; text-align: center; padding: 13px; background: #0b0a08; border-top: 1px solid var(--line);
+  color: var(--gold-bright); font-family: var(--sans); font-size: 13px; font-weight: 700; text-decoration: none;
+}
+@media (max-width: 420px) {
+  .agent-phone { right: 16px; bottom: 16px; width: calc(100vw - 32px); }
+  .agent-fab { right: 16px; bottom: 16px; }
+}
+
 /* ============ PROMISE ============ */
 .promise {
   background:
@@ -1866,6 +1915,39 @@ details[open] .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
   </div>
 </footer>
 
+<!-- ===== COVARA AGENT ===== -->
+<button class="agent-fab" id="agentFab" aria-label="Open Covara Agent">
+  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#0b0a08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+  </svg>
+</button>
+<div class="agent-phone" id="agentPhone">
+  <div class="agent-statusbar">
+    <span class="agent-time">9:41</span>
+    <span class="agent-island"></span>
+    <span class="agent-battery">
+      100%
+      <svg width="22" height="11" viewBox="0 0 22 11" fill="none">
+        <rect x="1" y="1" width="18" height="9" rx="2.5" stroke="#1a1712" stroke-width="1"/>
+        <rect x="2.5" y="2.5" width="15" height="6" rx="1.2" fill="#1a1712"/>
+        <rect x="20" y="3.5" width="1.5" height="4" rx="0.7" fill="#1a1712"/>
+      </svg>
+    </span>
+  </div>
+  <div class="agent-head">
+    <span class="agent-dot"></span>
+    <div>
+      <div class="agent-title">Covara Agent</div>
+      <div class="agent-sub">Usually replies instantly</div>
+    </div>
+    <button class="agent-close" id="agentClose" aria-label="Close">✕</button>
+  </div>
+  <div class="agent-body" id="agentBody">
+    <div class="agent-msg bot">Hi! I'm the Covara Agent. Ask me anything below 👇</div>
+  </div>
+  <a href="tel:+919891170905" class="agent-call">📞 Call us: +91 98911 70905</a>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const sbPublic = supabase.createClient(
@@ -1877,6 +1959,61 @@ function esc(str) {
   if (str === null || str === undefined) return "";
   return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
+
+// ---------- Covara Agent (rule-based, free — no API calls) ----------
+const AGENT_QA = [
+  { q: "How does the 48-hour prototype work?", a: "After a formal meeting and signed contract, we deliver a fully working prototype of your website within 48 hours. At this stage, you're welcome to request changes at no extra cost — once you're happy, we refine everything into your final website." },
+  { q: "What does \"managed forever\" mean?", a: "Managed forever means our work doesn't stop at launch. We continuously make updates for you, renew your domain, and upgrade your site over time to stay current with the latest trends and standards." },
+  { q: "Do I own my website and domain?", a: "Covara Global Pvt. Ltd. retains ownership of the domain. If our contract is terminated due to a fault on our end, ownership is transferred to you." },
+  { q: "Can you work with businesses outside India?", a: "Absolutely — we're glad to work with clients internationally, and currently offer our services in 115+ countries." },
+  { q: "What if I already have a website?", a: "We can host your project on that same domain through an ownership transfer. If the arrangement doesn't work out, a new domain will need to be purchased — reusing the old one isn't recommended." },
+  { q: "How much does a website cost?", a: "Our Growth Website Package starts at ₹12,000 one-time plus ₹2,000/month for full management. We also offer E-Restro at ₹4,000 and Student Portfolio Websites at ₹300/month, plus add-ons like e-commerce, SEO, and social media management. Use our pricing section below for an exact quote." },
+  { q: "What's included in the Student Portfolio Website?", a: "Built for students preparing study-abroad applications — a personal portfolio showcasing your projects, achievements, and story, all in one polished link at ₹300/month." },
+  { q: "What's included in E-Restro?", a: "Our complete package for restaurants and cafés — a website, a digital menu with QR scanner, social media assets, and full launch support, for ₹4,000 one-time." },
+  { q: "How do I get started?", a: "Use our pricing section to pick your services and send a request, or reach out directly via WhatsApp, email, or phone. We'll follow up to schedule a formal meeting and contract." },
+];
+
+const agentFab = document.getElementById("agentFab");
+const agentPhone = document.getElementById("agentPhone");
+const agentBody = document.getElementById("agentBody");
+
+function appendQuestionsBlock() {
+  const block = document.createElement("div");
+  block.className = "agent-questions";
+  block.innerHTML = AGENT_QA.map((item, i) => `<button type="button" class="agent-q-btn" data-i="${i}">${esc(item.q)}</button>`).join("");
+  agentBody.appendChild(block);
+  block.querySelectorAll(".agent-q-btn").forEach((btn) => {
+    btn.addEventListener("click", () => askAgent(parseInt(btn.dataset.i, 10), block));
+  });
+  agentBody.scrollTop = agentBody.scrollHeight;
+}
+
+function askAgent(i, sourceBlock) {
+  const item = AGENT_QA[i];
+  sourceBlock.remove();
+
+  const userMsg = document.createElement("div");
+  userMsg.className = "agent-msg user";
+  userMsg.textContent = item.q;
+  agentBody.appendChild(userMsg);
+
+  const botMsg = document.createElement("div");
+  botMsg.className = "agent-msg bot";
+  botMsg.textContent = item.a;
+  agentBody.appendChild(botMsg);
+
+  appendQuestionsBlock();
+}
+
+appendQuestionsBlock();
+agentFab.addEventListener("click", () => {
+  agentPhone.classList.add("open");
+  agentFab.classList.add("hide");
+});
+document.getElementById("agentClose").addEventListener("click", () => {
+  agentPhone.classList.remove("open");
+  agentFab.classList.remove("hide");
+});
 
 function initials(name) {
   const parts = (name || "").trim().split(/\s+/).filter(Boolean);
