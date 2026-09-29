@@ -20,6 +20,21 @@
   .topbar-right a,.topbar-right button{color:var(--ivory-dim);text-decoration:none;background:none;border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:var(--sans);cursor:pointer;font-size:13.5px}
   .topbar-right button:hover,.topbar-right a:hover{color:var(--ivory);border-color:var(--gold)}
   .pfp-avatar{width:34px;height:34px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--ink);font-family:var(--serif);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .pw-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:120;display:none}
+  .pw-overlay.open{display:block}
+  .pw-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(360px,90vw);background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:26px;z-index:121;display:none}
+  .pw-modal.open{display:block}
+  .pw-modal h3{font-family:var(--serif);font-weight:450;font-size:19px;margin-bottom:16px;color:var(--ivory)}
+  .pw-modal label{display:block;font-size:12.5px;color:var(--ivory-dim);margin:12px 0 5px}
+  .pw-modal input{width:100%;background:var(--ink);border:1px solid var(--line-soft);border-radius:9px;padding:11px 13px;color:var(--ivory);font-family:var(--sans);font-size:14px}
+  .pw-modal input:focus{outline:none;border-color:var(--gold)}
+  .pw-msg{font-size:13px;margin-top:12px;min-height:0}
+  .pw-msg.err{color:#e58b7a}
+  .pw-msg.ok{color:var(--gold-bright)}
+  .pw-actions{display:flex;gap:10px;margin-top:18px}
+  .pw-cancel{flex:1;background:none;border:1px solid var(--line);color:var(--ivory-dim);border-radius:9px;padding:11px;font-family:var(--sans);font-size:13.5px;cursor:pointer}
+  .pw-submit{flex:1;background:var(--gold);border:none;color:var(--ink);border-radius:9px;padding:11px;font-family:var(--sans);font-weight:700;font-size:13.5px;cursor:pointer}
+  .pw-submit:hover{background:var(--gold-bright)}
   @media (max-width:600px){
     .topbar{flex-wrap:wrap;gap:10px}
     #emailTag{display:none}
@@ -72,7 +87,22 @@
     </div>
     <span id="emailTag" style="display:none"></span>
     <span class="pfp-avatar" id="pfpAvatar" title=""></span>
+    <button id="pwToggleBtn">Change password</button>
     <button id="signOutBtn">Sign out</button>
+  </div>
+</div>
+
+<div class="pw-overlay" id="pwOverlay"></div>
+<div class="pw-modal" id="pwModal">
+  <h3>Change password</h3>
+  <label>New password</label>
+  <input type="password" id="pwNew" placeholder="At least 6 characters">
+  <label>Confirm new password</label>
+  <input type="password" id="pwConfirm" placeholder="Repeat it">
+  <div class="pw-msg" id="pwMsg"></div>
+  <div class="pw-actions">
+    <button type="button" id="pwCancel" class="pw-cancel">Cancel</button>
+    <button type="button" id="pwSubmit" class="pw-submit">Update password</button>
   </div>
 </div>
 <main>
@@ -197,6 +227,50 @@ async function loadNotifications(userId) {
     }
   }, { once: true });
 }
+
+// ---------- Change password ----------
+const pwOverlay = document.getElementById("pwOverlay");
+const pwModal = document.getElementById("pwModal");
+function openPwModal() {
+  document.getElementById("pwNew").value = "";
+  document.getElementById("pwConfirm").value = "";
+  document.getElementById("pwMsg").textContent = "";
+  pwOverlay.classList.add("open");
+  pwModal.classList.add("open");
+}
+function closePwModal() {
+  pwOverlay.classList.remove("open");
+  pwModal.classList.remove("open");
+}
+document.getElementById("pwToggleBtn").addEventListener("click", openPwModal);
+document.getElementById("pwCancel").addEventListener("click", closePwModal);
+pwOverlay.addEventListener("click", closePwModal);
+
+document.getElementById("pwSubmit").addEventListener("click", async () => {
+  const msg = document.getElementById("pwMsg");
+  const pw1 = document.getElementById("pwNew").value;
+  const pw2 = document.getElementById("pwConfirm").value;
+  msg.className = "pw-msg";
+  if (pw1.length < 6) {
+    msg.className = "pw-msg err";
+    msg.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+  if (pw1 !== pw2) {
+    msg.className = "pw-msg err";
+    msg.textContent = "Passwords don't match.";
+    return;
+  }
+  const { error } = await sb.auth.updateUser({ password: pw1 });
+  if (error) {
+    msg.className = "pw-msg err";
+    msg.textContent = error.message;
+    return;
+  }
+  msg.className = "pw-msg ok";
+  msg.textContent = "Password updated!";
+  setTimeout(closePwModal, 1200);
+});
 
 document.getElementById("signOutBtn").addEventListener("click", async () => {
   await sb.auth.signOut();
